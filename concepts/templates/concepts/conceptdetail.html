@@ -1,0 +1,34 @@
+{% load mongo_filters %}
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+<h1>{{ concept.title }}</h1>
+<br/>
+<h2>{{ concept.description }}</h2>
+<br/>
+<h2>Author: {{ concept.author.username }}</h2>
+<h3>Publication Date: {{ concept.pub_date }}</h3>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'concepts:conceptupdate' concept.id %}" method="post">
+{% csrf_token %}
+<input type="text" name="description" id="description" value="{{ concept.description }}" />
+<br/>
+<h3>number of properties: {{ concept.properties|length }}</h3>
+{% for property in concept.properties %}
+    <input type="text" name="prop_{{ property.property_id }}" id="prop_{{ property.property_id }}" value="{{ property.feature.title }}" />
+    <select name="proptype_{{ property.property_id }}" id="proptype_{{ property.property_id }}">
+        {% for type in PROPERTY_TYPE %}
+            <option
+                    {% if type.0 == property.feature.property_type %}
+                        selected
+                    {% endif %}
+            value="{{ type.0 }}">{{ type.1 }}</option>
+        {% endfor %}
+    </select>
+    <input type="text" name="propval_{{ property.property_id }}" id="propval_{{ property.property_id }}" value="{{ property.value }}" />
+    <br />
+{% endfor %}
+<input type="submit" value="Vote" />
+</form>

@@ -1,0 +1,9 @@
+{% if concept_ids %}
+    <ul>
+    {% for concept_id in concept_ids %}
+        <li><a href="/polls/{{ poll.id }}/">{{ poll.question }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No concept is available.</p>
+{% endif %

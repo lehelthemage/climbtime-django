@@ -1,0 +1,11 @@
+{% if latest_concept_list %}
+	<ul>
+	{% for concept in latest_concept_list %}
+	<li><a href="{% url 'concepts:conceptdetail' concept.id %}">
+		{{ concept.title }}
+	</a></li>
+	{% endfor %}
+	</ul>
+{% else %}
+    <p>No concept is available.</p>
+{% endif %}
