@@ -1,6 +1,7 @@
 {% load mongo_filters %}
-
-<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+{% load staticfiles %}
+<script type="text/javascript" src="{% static "concepts/property_functions.js" %}"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
 <h1>{{ concept.title }}</h1>
 <br/>
@@ -16,19 +17,31 @@
 <input type="text" name="description" id="description" value="{{ concept.description }}" />
 <br/>
 <h3>number of properties: {{ concept.properties|length }}</h3>
-{% for property in concept.properties %}
-    <input type="text" name="prop_{{ property.property_id }}" id="prop_{{ property.property_id }}" value="{{ property.feature.title }}" />
-    <select name="proptype_{{ property.property_id }}" id="proptype_{{ property.property_id }}">
-        {% for type in PROPERTY_TYPE %}
-            <option
-                    {% if type.0 == property.feature.property_type %}
-                        selected
-                    {% endif %}
-            value="{{ type.0 }}">{{ type.1 }}</option>
-        {% endfor %}
-    </select>
-    <input type="text" name="propval_{{ property.property_id }}" id="propval_{{ property.property_id }}" value="{{ property.value }}" />
-    <br />
-{% endfor %}
-<input type="submit" value="Vote" />
+<ul id="prop_list">
+<script type="text/javascript">
+
+    $(document).ready(function(){
+    {% for property in concept.properties %}
+    addPropertyRow('{{ property.feature.title }}','{{ property.feature.property_type }}','{{ property.value }}', '{{ property.property_id }}');
+    {% endfor %}
+    });
+
+</script>
+</ul>
+<button type="button" id="add_prop">Add Property</button>
+<br/>
+<br/>
+<input type="submit" value="Save" />
 </form>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        $("#add_prop").click(function(){
+            addPropertyRow(null, null, null, null);
+        });
+
+    });
+
+</script>
+

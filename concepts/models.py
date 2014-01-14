@@ -2,12 +2,14 @@ from mongoengine import *
 from mongoengine.django.auth import User
 
 PROPERTY_TYPE = (    ('Num', 'Number'),
+                     ('TF', 'True/False'),
                      ('Str', 'String'),
                      ('Date', 'Date & Time'),
                      ('Time', 'Time'),
                      ('Dur', 'Time Duration'),
                      ('Url', 'URL'),
-                     ('Geo', 'Location'))
+                     ('Geo', 'Location'),
+                     ('Con', 'Topic'))
 
 
 class Picture(EmbeddedDocument):
@@ -18,7 +20,8 @@ class Picture(EmbeddedDocument):
         return self.image
 
 
-class Feature(EmbeddedDocument):
+class Feature(Document):
+    id = ObjectIdField(primary_key=True)
     title = StringField(max_length=100, required=True)
     is_property = BooleanField(default=True)
     property_type = StringField(max_length=50, choices=PROPERTY_TYPE)
@@ -33,7 +36,7 @@ class Category(Document):
     ancestors = ListField(EmbeddedDocumentField('self'))
     ancestor_associations = ListField(IntField())
     parent = EmbeddedDocumentField('self')
-    features = ListField(EmbeddedDocumentField(Feature))
+    features = ListField(ReferenceField(Feature))
 
     def __unicode__(self):
         return self.title
@@ -49,8 +52,8 @@ class CategoryAssociation(EmbeddedDocument):
 
 
 class Property(EmbeddedDocument):
-    property_id = ObjectIdField(unique=True)
-    feature = EmbeddedDocumentField(Feature)
+    property_id = ObjectIdField(unique=True, primary_key=True)
+    feature = ReferenceField(Feature)
     value = StringField(max_length=2000, required=True)
 
     def __unicode__(self):
@@ -58,6 +61,7 @@ class Property(EmbeddedDocument):
 
 
 class Concept(Document):
+    id = ObjectIdField(primary_key=True)
     title = StringField(max_length=200, required=True)
     version = IntField(default=1)
     original_version_id = ObjectIdField()
