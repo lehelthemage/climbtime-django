@@ -32,10 +32,11 @@ class Feature(Document):
 
 class Category(Document):
     title = StringField(max_length=200, required=True)
+    description = StringField(max_length=2000, required=True)
     version = IntField(default=1)
-    ancestors = ListField(EmbeddedDocumentField('self'))
+    ancestors = ListField(ReferenceField('self'))
     ancestor_associations = ListField(IntField())
-    parent = EmbeddedDocumentField('self')
+    parent = ReferenceField('self', default=None)
     features = ListField(ReferenceField(Feature))
 
     def __unicode__(self):

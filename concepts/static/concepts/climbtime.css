@@ -1,0 +1,117 @@
+body, p {
+    font-family: Impact, Charcoal, sans-serif;
+}
+
+input {
+
+}
+
+label {
+
+}
+
+div, button, .ctbutton {
+    background-color: rgba(52, 238, 24, 0.6);
+    color: White;
+    border-style: solid;
+    border-width: 1px;
+    border-color: white;
+}
+
+ul {
+    list-style-type: none;
+    width:380px;
+	padding-left:20px;
+}
+li .featuresheader {
+
+}
+
+.general_fs, .properties_fs {}
+
+ .titlelabel   {
+    float: left;
+	font-weight: bold;
+	width:150px;
+	margin-right:5px;
+	padding:5px;
+}
+
+ .typelabel {
+    float: left;
+	font-weight: bold;
+	width:150px;
+	margin-right:5px;
+	padding:5px;
+}
+
+
+.ctaddfeaturelabels {
+    width: 400px;
+    padding-top: 5px;
+    padding-left: 5px;
+}
+
+.valuelabel {
+	float:left;
+    clear: both;
+	font-weight: bold;
+	width:100px;
+	margin-right:5px;
+	padding:5px;
+	color:black;
+}
+
+.removelabel {
+    float: right;
+	font-weight: bold;
+	width:25px;
+	margin-right:5px;
+	padding:5px;
+	color:black;
+	text-align:center;
+}
+
+.ctnewtype, .ctnewfeaturetitle, .ctnewvalue {
+	float:left;
+	width:109px;
+	margin-right:5px;
+}
+
+
+
+.ctnewvaluelabel  {
+	float:left;
+	width:100px;
+	text-align:right;
+	margin-right:5px;
+
+}
+
+.ctfields {
+	width:400px;
+}
+
+
+.ctnewtype, .ctnewfeaturetitle, .ctnewvalue {
+
+	width:150px;
+	margin-right:5px;
+}
+
+
+.ctproprow {
+    width: 400px;
+}
+
+.ctproprow input {
+    width: 150px;
+    margin-right: 5px;
+}
+
+
+#add_prop_button{
+    margin-left: 50px;
+}
+
+

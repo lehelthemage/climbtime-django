@@ -5,24 +5,29 @@ from django.shortcuts import get_object_or_404, render
 from django.core.urlresolvers import reverse
 import bson
 
-from concepts.models import Concept, Feature, Property, PROPERTY_TYPE
+from concepts.models import Concept, Feature, Property, Category, PROPERTY_TYPE
 
 
-def get_new_properties(request):
+def get_new_properties(request, for_category):
 
     new_properties = []
 
    #iterate once through the POST items to create the Property objects
     for i, v in request.POST.items():
+
         if i[:5] == "prop_" and len(i[5:]) < 3:
-            if v == '' or request.POST["propval_" + i[5:]] == '':
+
+            if v == '' or (not for_category and request.POST.get("propval_" + i[5:], False) is False):
                 continue
+
             p = Property()
             f = Feature()
             p.feature = f
             p.property_id = i[5:]
             p.feature.title = v
             new_properties.append(p)
+
+
 
     #now iterate through POST list for property_type and value
     for i, v in request.POST.items():
@@ -49,7 +54,7 @@ def index(request):
     return render(request, 'concepts/index.html', context)
 
 
-def conceptdetail(request, concept_id):
+def concept_detail(request, concept_id):
     try:
         concept = Concept.objects.get(id=concept_id)
     except Concept.DoesNotExist:
@@ -62,7 +67,7 @@ def conceptdetail(request, concept_id):
 
 
 
-def conceptupdate(request, concept_id):
+def concept_update(request, concept_id):
 
     c = Concept.objects.get(id=concept_id)
     c.description = request.POST['description']
@@ -88,7 +93,7 @@ def conceptupdate(request, concept_id):
                 break
 
     #add new properties
-    properties = get_new_properties(request)
+    properties = get_new_properties(request, False)
     for p in properties:
         p.property_id = bson.ObjectId()
         c.properties.append(p)
@@ -117,6 +122,65 @@ def conceptupdate(request, concept_id):
 
     return HttpResponseRedirect(reverse('concepts:conceptdetail', args=(c.id,)))
 
-    def newconcept(request):
-        return HttpResponse("under development.")
 
+
+def new_concept(request):
+    return HttpResponse("under development.")
+
+
+def new_category(request):
+    return render(request, 'concepts/newcategory.html')
+
+
+def add_category(request):
+
+    new_category = Category()
+
+    new_category.title = request.POST['title']
+    new_category.description = request.POST['description']
+    new_category.parent = None
+
+    form_properties = get_new_properties(request, True)
+
+    for form_property in form_properties:
+
+        #ugly upsert (in case its not in db)
+        Feature.objects(
+            title=form_property.feature.title,
+            is_property=True,
+            property_type=form_property.feature.property_type
+            ).update_one(
+            set__title=form_property.feature.title,
+            set__is_property=True,
+            set__property_type=form_property.feature.property_type,
+            upsert=True
+        )
+
+        feature = Feature.objects.filter(
+            title=form_property.feature.title,
+            is_property=True,
+            property_type=form_property.feature.property_type
+            )[0]
+
+        new_category.features.append(feature)
+
+    new_category.save()
+
+    return HttpResponseRedirect(reverse('concepts:categorydetail', args=(new_category.id,)))
+
+
+def category_detail(request, category_id):
+    category = Category.objects.get(id=category_id)
+    return HttpResponse(category.title)
+
+
+def category_update(request):
+    return HttpResponse("under development.")
+
+
+def concept_ajax_features(request):
+    return HttpResponse("under development.")
+
+
+def autocomplete_categories(request):
+    return HttpResponse("under development.")

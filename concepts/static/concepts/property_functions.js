@@ -1,9 +1,6 @@
 /**
  * Created by Lehel Kovach on 1/12/14.
  */
-function testFunc() {
-    alert('testFunc');
-}
 
 var propIndex = 0;
 
@@ -19,7 +16,7 @@ propTypes[7] = ['Geo', 'Location'];
 propTypes[8] = ['Con', 'Topic'];
 
 
-function addPropertyRow(title, type, val, propId) {
+function addPropertyRow(title, type, val, propId, isCategory) {
 
     propIndex++;
 
@@ -34,25 +31,33 @@ function addPropertyRow(title, type, val, propId) {
         propId = propIndex;
 
 
+
 	rowHtml = '<li id=\'proprow_' + propId + '\'>' +
-				'<div  class=\'ctproprow\'>' +
 				'<input class=\'ctnewfeaturetitle\' value=\'' + title + '\' id=\'prop_' + propId +  '\' name=\'prop_' + propId + '\' />' +
                 '<select class=\'ctnewtype\' id=\'proptype_' + propId + '\' name=\'proptype_' + propId + '\'>';
 
-     for(i = 0; i < 9; i++) {
+
+    for(i = 0; i < 9; i++) {
          rowHtml += '<option ';
 
          if(type == propTypes[i][0])
             rowHtml += ' selected ';
 
          rowHtml += 'value=\'' + propTypes[i][0] +  '\'>' + propTypes[i][1] + '</option>';
-     }
+    }
 
-      rowHtml += '</select>';
-      rowHtml += '<input class=\'ctnewvalue\' value=\'' + val + '\' name=\'propval_' + propId + '\' id=\'propval_' + propId + '\' />' +
-				'<button type=\'button\' id=\'remove' + propId + '\'>-</button></div></li>';
+    rowHtml += '</select>';
+
+
+    if(isCategory != true) {
+        rowHtml += '<input class=\'ctnewvalue\' value=\'' + val + '\' name=\'propval_' + propId + '\' id=\'propval_' + propId + '\' />'
+    }
+
+    rowHtml += '<button type=\'button\' id=\'remove' + propId + '\'>-</button></li>';
+
 
     jQuery('#prop_list').append(rowHtml);
+
 
     jQuery('#remove' + propId).click(function() {
 		var currentId = $(this).attr('id');
