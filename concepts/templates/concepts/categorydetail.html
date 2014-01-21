@@ -3,27 +3,29 @@
 <script type="text/javascript" src="{% static "concepts/property_functions.js" %}"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
-<h1>{{ concept.title }}</h1>
+<h1>{{ category.title }}</h1>
 <br/>
-<h2>{{ concept.description }}</h2>
+<h2>{{ category.description }}</h2>
 <br/>
-<h2>Author: {{ concept.author.username }}</h2>
-<h3>Publication Date: {{ concept.pub_date }}</h3>
+<h2>Author: {{ category.author.username }}</h2>
+<h3>Publication Date: {{ category.pub_date }}</h3>
+<h3>Parent: {{ category.parent.title }}</h3>
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<form action="{% url 'concepts:conceptupdate' concept.id %}" method="post">
+<form action="{% url 'concepts:categoryupdate' category.id %}" method="post">
 {% csrf_token %}
 <input type="text" name="description" id="description" value="{{ concept.description }}" />
 <br/>
-<h3>number of properties: {{ concept.properties|length }}</h3>
+<h3>number of properties: {{ category.features|length }}</h3>
+
 <ul id="prop_list">
 <script type="text/javascript">
 
     $(document).ready(function(){
-    {% for property in concept.properties %}
-    addPropertyRow('{{ property.feature.title }}','{{ property.feature.property_type }}','{{ property.value }}', '{{ property.property_id }}');
-    {% endfor %}
+        {% for feature in category.features %}
+        addPropertyRow('{{ feature.title }}','{{ feature.property_type }}', null, null, true);
+        {% endfor %}
     });
 
 </script>
@@ -38,7 +40,7 @@
 
     $(document).ready(function() {
         $("#add_prop").click(function(){
-            addPropertyRow(null, null, null, null);
+            addPropertyRow(null, null, null, null, true);
         });
 
     });

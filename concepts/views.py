@@ -20,12 +20,18 @@ def get_new_properties(request, for_category):
             if v == '' or (not for_category and request.POST.get("propval_" + i[5:], False) is False):
                 continue
 
-            p = Property()
             f = Feature()
-            p.feature = f
-            p.property_id = i[5:]
-            p.feature.title = v
-            new_properties.append(p)
+
+            if for_category:
+                f.id = i[5:]
+                f.title = v
+                new_properties.append(f)
+            else:
+                p = Property()
+                p.feature = f
+                p.property_id = i[5:]
+                p.feature.title = v
+                new_properties.append(p)
 
 
 
@@ -33,9 +39,13 @@ def get_new_properties(request, for_category):
     for i, v in request.POST.items():
         if i[:9] == "proptype_" and len(i[9:]) < 3:
             for new_property in new_properties:
-                if new_property.property_id == i[9:]:
-                    new_property.feature.property_type = v
-                    break
+                if for_category:
+                    if new_property.id == i[9:]:
+                        new_property.property_type = v
+                else:
+                    if new_property.property_id == i[9:]:
+                        new_property.feature.property_type = v
+                break
 
         elif i[:8] == "propval_" and len(i[8:]) < 3:
             for new_property in new_properties:
@@ -66,58 +76,95 @@ def concept_detail(request, concept_id):
                       'PROPERTY_TYPE': PROPERTY_TYPE})
 
 
+def update_properties(request, c, for_category):
 
-def concept_update(request, concept_id):
-
-    c = Concept.objects.get(id=concept_id)
-    c.description = request.POST['description']
+    if not for_category:
+        properties = c.properties
+    else:
+        properties = c.features
 
     property_deletions = []
     #update the properties
-    for p in c.properties:
-        p.feature.title = request.POST.get('prop_' + str(p.property_id), False)
-        if not p.feature.title:
+    for p in properties:
+        if for_category:
+            property_id = p.id
+        else:
+            property_id = p.property_id
+
+        title = request.POST.get('prop_' + str(property_id), False)
+        if not title:
             property_deletions.append(p)
             continue
-        p.feature.property_type = request.POST['proptype_' + str(p.property_id)]
-        p.value = request.POST['propval_' + str(p.property_id)]
-        f = p.feature
+        property_type = request.POST['proptype_' + str(property_id)]
+
+        if not for_category:
+            p.value = request.POST['propval_' + str(property_id)]
+
+        if for_category:
+            f = p
+        else:
+            f = p.feature
+
+        f.title = title
+        f.property_type = property_type
         f.save()
 
 
     #remove property_deletions
     for pd in property_deletions:
-        for i, p in enumerate(c.properties):
-            if p.property_id == pd.property_id:
-                c.properties.pop(i)
+        for i, p in enumerate(properties):
+            if for_category:
+                if p.id == pd.id:
+                    properties.pop(i)
+            elif p.property_id == pd.property_id:
+                properties.pop(i)
                 break
 
     #add new properties
-    properties = get_new_properties(request, False)
-    for p in properties:
-        p.property_id = bson.ObjectId()
-        c.properties.append(p)
+    new_properties = get_new_properties(request, for_category)
+    for i, new_property in enumerate(new_properties):
+        if not for_category:
+            new_property.property_id = bson.ObjectId()
+        properties.append(new_property)
+
         #ugly upsert (in case its not in db)
+        if for_category:
+            title = new_property.title
+            is_property = new_property.is_property
+            property_type = new_property.property_type
+        else:
+            title = new_property.feature.title
+            is_property = new_property.feature.is_property
+            property_type = new_property.feature.property_type
+
         Feature.objects(
-            title=p.feature.title,
-            is_property=p.feature.is_property,
-            property_type=p.feature.property_type
+            title=title,
+            is_property=is_property,
+            property_type=property_type
             ).update_one(
-            set__title=p.feature.title,
-            set__is_property=p.feature.is_property,
-            set__property_type=p.feature.property_type,
+            set__title=title,
+            set__is_property=is_property,
+            set__property_type=property_type,
             upsert=True
         )
 
-        f = Feature.objects.get(
-            title=p.feature.title,
-            is_property=p.feature.is_property,
-            property_type=p.feature.property_type
-            )
+        f = Feature.objects.filter(
+            title=title,
+            is_property=is_property,
+            property_type=property_type
+            )[0]
 
-        p.feature = f
+        if for_category:
+            c.features[i] = f
+        else:
+            c.properties[i].feature = f
 
 
+def concept_update(request, concept_id):
+
+    c = Concept.objects.get(id=concept_id)
+    c.description = request.POST['description']
+    update_properties(request, c, False)
     c.save()
 
     return HttpResponseRedirect(reverse('concepts:conceptdetail', args=(c.id,)))
@@ -171,11 +218,19 @@ def add_category(request):
 
 def category_detail(request, category_id):
     category = Category.objects.get(id=category_id)
-    return HttpResponse(category.title)
+    return render(request, 'concepts/categorydetail.html',
+                  {
+                      'category': category,
+                      'PROPERTY_TYPE': PROPERTY_TYPE})
 
 
-def category_update(request):
-    return HttpResponse("under development.")
+def category_update(request, category_id):
+    c = Category.objects.get(id=category_id)
+    c.description = request.POST['description']
+    update_properties(request, c, True)
+    c.save()
+
+    return HttpResponseRedirect(reverse('concepts:categorydetail', args=(category_id,)))
 
 
 def concept_ajax_features(request):
