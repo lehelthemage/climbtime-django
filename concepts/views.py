@@ -85,25 +85,26 @@ def update_properties(request, c, for_category):
 
     property_deletions = []
     #update the properties
-    for p in properties:
+    for property in properties:
         if for_category:
-            property_id = p.id
+            property_id = property.id
         else:
-            property_id = p.property_id
+            property_id = property.property_id
 
         title = request.POST.get('prop_' + str(property_id), False)
         if not title:
-            property_deletions.append(p)
+            property_deletions.append(property)
             continue
+
         property_type = request.POST['proptype_' + str(property_id)]
 
         if not for_category:
-            p.value = request.POST['propval_' + str(property_id)]
+            property_value = request.POST['propval_' + str(property_id)]
 
         if for_category:
-            f = p
+            f = property
         else:
-            f = p.feature
+            f = property.feature
 
         f.title = title
         f.property_type = property_type
@@ -125,7 +126,7 @@ def update_properties(request, c, for_category):
     for i, new_property in enumerate(new_properties):
         if not for_category:
             new_property.property_id = bson.ObjectId()
-        properties.append(new_property)
+
 
         #ugly upsert (in case its not in db)
         if for_category:
@@ -155,9 +156,10 @@ def update_properties(request, c, for_category):
             )[0]
 
         if for_category:
-            c.features[i] = f
+            c.features.append(f)
         else:
-            c.properties[i].feature = f
+            new_property.feature = f
+            c.properties.append(new_property)
 
 
 def concept_update(request, concept_id):
@@ -193,20 +195,20 @@ def add_category(request):
 
         #ugly upsert (in case its not in db)
         Feature.objects(
-            title=form_property.feature.title,
+            title=form_property.title,
             is_property=True,
-            property_type=form_property.feature.property_type
+            property_type=form_property.property_type
             ).update_one(
-            set__title=form_property.feature.title,
+            set__title=form_property.title,
             set__is_property=True,
-            set__property_type=form_property.feature.property_type,
+            set__property_type=form_property.property_type,
             upsert=True
         )
 
         feature = Feature.objects.filter(
-            title=form_property.feature.title,
+            title=form_property.title,
             is_property=True,
-            property_type=form_property.feature.property_type
+            property_type=form_property.property_type
             )[0]
 
         new_category.features.append(feature)

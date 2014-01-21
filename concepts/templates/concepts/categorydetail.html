@@ -24,7 +24,7 @@
 
     $(document).ready(function(){
         {% for feature in category.features %}
-        addPropertyRow('{{ feature.title }}','{{ feature.property_type }}', null, null, true);
+        addPropertyRow('{{ feature.title }}','{{ feature.property_type }}', null, '{{ feature.id }}', true);
         {% endfor %}
     });
 
