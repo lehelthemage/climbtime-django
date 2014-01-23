@@ -2,6 +2,11 @@
 {% load staticfiles %}
 <script type="text/javascript" src="{% static "concepts/property_functions.js" %}"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script  type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
+
+<form action="{% url 'concepts:categoryupdate' category.id %}" method="post">
+{% csrf_token %}
 
 <h1>{{ category.title }}</h1>
 <br/>
@@ -10,11 +15,11 @@
 <h2>Author: {{ category.author.username }}</h2>
 <h3>Publication Date: {{ category.pub_date }}</h3>
 <h3>Parent: {{ category.parent.title }}</h3>
+<input type="text" id="parent" name="parent" value="{{ category.parent.title }}"/>
+<input type="hidden" id="parent_id" name="parent_id" value="{{ category.parent.id}}"/>
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<form action="{% url 'concepts:categoryupdate' category.id %}" method="post">
-{% csrf_token %}
 <input type="text" name="description" id="description" value="{{ concept.description }}" />
 <br/>
 <h3>number of properties: {{ category.features|length }}</h3>
@@ -39,8 +44,45 @@
 <script type="text/javascript">
 
     $(document).ready(function() {
+
         $("#add_prop").click(function(){
             addPropertyRow(null, null, null, null, true);
+        });
+
+        $('#parent').autocomplete({
+            source:
+            function (request, response) {
+                $.ajax({
+                    url: "{% url 'concepts:parentautocomplete' %}",
+                    dataType: "jsonp",
+                    data: {
+                        term: request.term
+                    },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            $("#parent_id").val(item.id);
+
+                            return {
+                                label: item.title,
+                                value: item.title
+                            }
+                        }));
+                    }
+                });
+            },
+            minLength: 2
+            /*
+            select: function (event, ui) {
+                log(ui.item ?
+                        "Selected: " + ui.item.label :
+                        "Nothing selected, input was " + this.value);
+            },
+            open: function () {
+                $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
+            },
+            close: function () {
+                $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
+            }*/
         });
 
     });

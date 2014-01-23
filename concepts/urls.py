@@ -10,6 +10,7 @@ urlpatterns = patterns('',
                        url(r'^addcategory/', 'concepts.views.add_category', name='addcategory'),
                        url(r'^categorydetail/(?P<category_id>\w+)/$', 'concepts.views.category_detail', name='categorydetail'),
                        url(r'^categoryupdate/(?P<category_id>\w+)/$', 'concepts.views.category_update', name='categoryupdate'),
+                       url(r'^parentautocomplete/', 'concepts.views.autocomplete_parents', name='parentautocomplete'),
 
 
 )

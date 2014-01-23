@@ -4,6 +4,7 @@ from django.template import RequestContext, loader
 from django.shortcuts import get_object_or_404, render
 from django.core.urlresolvers import reverse
 import bson
+import simplejson
 
 from concepts.models import Concept, Feature, Property, Category, PROPERTY_TYPE
 
@@ -229,6 +230,7 @@ def category_detail(request, category_id):
 def category_update(request, category_id):
     c = Category.objects.get(id=category_id)
     c.description = request.POST['description']
+    c.parent = Category.objects.get(id=request.POST['parent_id'])
     update_properties(request, c, True)
     c.save()
 
@@ -239,5 +241,22 @@ def concept_ajax_features(request):
     return HttpResponse("under development.")
 
 
-def autocomplete_categories(request):
-    return HttpResponse("under development.")
+def autocomplete_parents(request):
+    if request.is_ajax():
+        callback = request.GET.get('callback', '')
+        starts_with = request.GET.get('term', '')
+        parents = Category.objects.filter(title__istartswith=starts_with)
+
+        results = []
+        for parent in parents:
+            req = {}
+            req['id'] = str(parent.id)
+            req['title'] = parent.title
+            results.append(req)
+
+        response = simplejson.dumps(results)
+        response = callback + '(' + response + ');'
+    else:
+        response = 'fail'
+
+    return HttpResponse(response, mimetype="application/json")
