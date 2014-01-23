@@ -10,10 +10,9 @@ from concepts.models import Concept, Feature, Property, Category, PROPERTY_TYPE
 
 
 def get_new_properties(request, for_category):
-
     new_properties = []
 
-   #iterate once through the POST items to create the Property objects
+    #iterate once through the POST items to create the Property objects
     for i, v in request.POST.items():
 
         if i[:5] == "prop_" and len(i[5:]) < 3:
@@ -78,7 +77,6 @@ def concept_detail(request, concept_id):
 
 
 def update_properties(request, c, for_category):
-
     if not for_category:
         properties = c.properties
     else:
@@ -143,7 +141,7 @@ def update_properties(request, c, for_category):
             title=title,
             is_property=is_property,
             property_type=property_type
-            ).update_one(
+        ).update_one(
             set__title=title,
             set__is_property=is_property,
             set__property_type=property_type,
@@ -154,7 +152,7 @@ def update_properties(request, c, for_category):
             title=title,
             is_property=is_property,
             property_type=property_type
-            )[0]
+        )[0]
 
         if for_category:
             c.features.append(f)
@@ -164,14 +162,12 @@ def update_properties(request, c, for_category):
 
 
 def concept_update(request, concept_id):
-
     c = Concept.objects.get(id=concept_id)
     c.description = request.POST['description']
     update_properties(request, c, False)
     c.save()
 
     return HttpResponseRedirect(reverse('concepts:conceptdetail', args=(c.id,)))
-
 
 
 def new_concept(request):
@@ -183,7 +179,6 @@ def new_category(request):
 
 
 def add_category(request):
-
     new_category = Category()
 
     new_category.title = request.POST['title']
@@ -193,24 +188,22 @@ def add_category(request):
     form_properties = get_new_properties(request, True)
 
     for form_property in form_properties:
-
         #ugly upsert (in case its not in db)
         Feature.objects(
             title=form_property.title,
             is_property=True,
             property_type=form_property.property_type
-            ).update_one(
+        ).update_one(
             set__title=form_property.title,
             set__is_property=True,
             set__property_type=form_property.property_type,
-            upsert=True
-        )
+            upsert=True)
 
         feature = Feature.objects.filter(
             title=form_property.title,
             is_property=True,
             property_type=form_property.property_type
-            )[0]
+        )[0]
 
         new_category.features.append(feature)
 
@@ -260,3 +253,30 @@ def autocomplete_parents(request):
         response = 'fail'
 
     return HttpResponse(response, mimetype="application/json")
+
+
+def get_category_properties(request, category_id):
+
+    callback = request.GET.get('callback', '')
+
+    if request.is_ajax():
+        category = Category.objects.get(id=category_id)
+
+        results = []
+        for category_features in category.parent.features:
+            if not category_features.is_property:
+                continue
+
+            req = {}
+            req['title'] = category_features.title
+            req['property_type'] = category_features.property_type
+            results.append(req)
+
+        response = simplejson.dumps(results)
+        response = callback + '(' + response + ');'
+
+    else:
+        response = 'fail'
+
+    return HttpResponse(response, mimetype="application/json")
+

@@ -97,3 +97,21 @@ function addPropertyRow(title, type, val, propId, isCategory) {
 
 }
 
+function getConceptProperties(url, category_id) {
+
+    alert(url);
+
+    $.ajax({
+        url: url,
+        dataType: "jsonp",
+        data: {
+            category_id: category_id
+        },
+        success: function (data) {
+            $.each(data, function(index, element) {
+                addPropertyRow(element.title, element.property_type, null, null, true);
+            });
+        }
+    });
+}
+

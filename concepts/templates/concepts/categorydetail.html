@@ -62,6 +62,8 @@
                         response($.map(data, function (item) {
                             $("#parent_id").val(item.id);
 
+                            getConceptProperties("{% url 'concepts:getcategoryproperties' "52de82417febbd1536575a9d" %}", item.id)
+
                             return {
                                 label: item.title,
                                 value: item.title
@@ -71,20 +73,7 @@
                 });
             },
             minLength: 2
-            /*
-            select: function (event, ui) {
-                log(ui.item ?
-                        "Selected: " + ui.item.label :
-                        "Nothing selected, input was " + this.value);
-            },
-            open: function () {
-                $(this).removeClass("ui-corner-all").addClass("ui-corner-top");
-            },
-            close: function () {
-                $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
-            }*/
         });
-
     });
 
 </script>
