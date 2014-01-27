@@ -109,7 +109,6 @@ def update_properties(request, c, for_category):
         f.property_type = property_type
         f.save()
 
-
     #remove property_deletions
     for pd in property_deletions:
         for i, p in enumerate(properties):
@@ -125,7 +124,6 @@ def update_properties(request, c, for_category):
     for i, new_property in enumerate(new_properties):
         if not for_category:
             new_property.property_id = bson.ObjectId()
-
 
         #ugly upsert (in case its not in db)
         if for_category:
@@ -171,7 +169,45 @@ def concept_update(request, concept_id):
 
 
 def new_concept(request):
-    return HttpResponse("under development.")
+    return render(request, 'concepts/newcconcept.html')
+
+
+def add_concept(request):
+    new_con = Concept()
+
+    new_con.title = request.POST['title']
+    new_con.description = request.POST['description']
+    new_con.parent = None
+
+    form_properties = get_new_properties(request, True)
+
+    for form_property in form_properties:
+        #ugly upsert (in case its not in db)
+        Feature.objects(
+            title=form_property.title,
+            is_property=True,
+            property_type=form_property.property_type
+        ).update_one(
+            set__title=form_property.title,
+            set__is_property=True,
+            set__property_type=form_property.property_type,
+            upsert=True)
+
+        new_feature = Feature.objects.filter(
+            title=form_property.title,
+            is_property=True,
+            property_type=form_property.property_type
+        )[0]
+
+        new_property = Property(
+            feature=new_feature,
+            property_id=bson.ObjectId(),
+            value=form_property.value)
+        new_con.properties.append(new_property)
+
+    new_con.save()
+
+    return HttpResponseRedirect(reverse('concepts:conceptdetail', args=(new_con.id,)))
 
 
 def new_category(request):
@@ -179,11 +215,11 @@ def new_category(request):
 
 
 def add_category(request):
-    new_category = Category()
+    new_cat = Category()
 
-    new_category.title = request.POST['title']
-    new_category.description = request.POST['description']
-    new_category.parent = None
+    new_cat.title = request.POST['title']
+    new_cat.description = request.POST['description']
+    new_cat.parent = None
 
     form_properties = get_new_properties(request, True)
 
@@ -205,11 +241,11 @@ def add_category(request):
             property_type=form_property.property_type
         )[0]
 
-        new_category.features.append(feature)
+        new_cat.features.append(feature)
 
-    new_category.save()
+    new_cat.save()
 
-    return HttpResponseRedirect(reverse('concepts:categorydetail', args=(new_category.id,)))
+    return HttpResponseRedirect(reverse('concepts:categorydetail', args=(new_cat.id,)))
 
 
 def category_detail(request, category_id):
@@ -255,9 +291,10 @@ def autocomplete_parents(request):
     return HttpResponse(response, mimetype="application/json")
 
 
-def get_category_properties(request, category_id):
+def get_category_properties(request):
 
     callback = request.GET.get('callback', '')
+    category_id = request.GET.get('category_id', '')
 
     if request.is_ajax():
         category = Category.objects.get(id=category_id)

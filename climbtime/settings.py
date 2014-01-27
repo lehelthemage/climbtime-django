@@ -22,14 +22,16 @@ AUTHENTICATION_BACKENDS = (
     'mongoengine.django.auth.MongoEngineBackend',
 )
 
-_MONGODB_USER = 'mongouser'
-_MONGODB_PASSWD = 'password'
+_MONGODB_USER = 'lehelkovach@gmail.com'
+_MONGODB_PASSWD = 'Kovach789'
 _MONGODB_HOST = 'localhost'
 _MONGODB_NAME = 'climbtime'
-_MONGODB_DATABASE_HOST = 'mongodb://localhost/climbtime'
+#_MONGODB_DATABASE_HOST = 'mongodb://localhost/climbtime'
+_MONGODB_DATABASE_HOST = 'mongodb://lehel:Kovach789@paulo.mongohq.com:10011/climbtime'
     #% (_MONGODB_HOST, _MONGODB_NAME)
 
 
+#mongoengine.connect(_MONGODB_NAME, host=_MONGODB_DATABASE_HOST)
 mongoengine.connect(_MONGODB_NAME, host=_MONGODB_DATABASE_HOST)
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
@@ -72,7 +74,7 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = '/home/dorian/www/static/'
+STATIC_ROOT = 'C:/Users/Dorian/static/'
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"

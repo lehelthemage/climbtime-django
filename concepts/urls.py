@@ -11,7 +11,7 @@ urlpatterns = patterns('',
                        url(r'^categorydetail/(?P<category_id>\w+)/$', 'concepts.views.category_detail', name='categorydetail'),
                        url(r'^categoryupdate/(?P<category_id>\w+)/$', 'concepts.views.category_update', name='categoryupdate'),
                        url(r'^parentautocomplete/', 'concepts.views.autocomplete_parents', name='parentautocomplete'),
-                       url(r'^getcategoryproperties/(?P<category_id>\w+)/$', 'concepts.views.get_category_properties', name='getcategoryproperties'),
+                       url(r'^getcategoryproperties/$', 'concepts.views.get_category_properties', name='getcategoryproperties'),
 
 
 )

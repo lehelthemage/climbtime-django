@@ -1,0 +1,33 @@
+{% load mongo_filters %}
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ClimbTi.me</title>
+
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyD83j73KmJjZq_oqoo03vAqJaAT0bUxMF4&sensor=false"></script>
+    <script src="{% static "concepts/property_functions.js" %}"></script>
+    <script  src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script  src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <script  src="{% static "concepts/parent_autocomplete.js" %}"></script>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" href="{% static "concepts/climbtime.css" %}" />
+
+</head>
+<body>
+    <div class="main_page"></div>
+        <div class="banner">
+            <div class="title-container">
+            <h1>ClimbTi.me</h1>
+            </div>
+        </div>
+
+        {% block content %}
+        {% endblock %}
+
+        <div class="footer"></div>
+    </div>
+</body>
+</html>

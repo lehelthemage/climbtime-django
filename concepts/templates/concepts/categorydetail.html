@@ -3,6 +3,7 @@
 <script type="text/javascript" src="{% static "concepts/property_functions.js" %}"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script  type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script type="text/javascript" src="{% static "concepts/parent_autocomplete.js" %}"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
 
 <form action="{% url 'concepts:categoryupdate' category.id %}" method="post">
@@ -45,35 +46,14 @@
 
     $(document).ready(function() {
 
+        parentAutoUrl = "{% url 'concepts:parentautocomplete' %}";
+        propertiesAjaxUrl = "{% url 'concepts:getcategoryproperties' %}"
+        isCategory = true
+
         $("#add_prop").click(function(){
-            addPropertyRow(null, null, null, null, true);
+            addPropertyRow(null, null, null, null, isCategory);
         });
 
-        $('#parent').autocomplete({
-            source:
-            function (request, response) {
-                $.ajax({
-                    url: "{% url 'concepts:parentautocomplete' %}",
-                    dataType: "jsonp",
-                    data: {
-                        term: request.term
-                    },
-                    success: function (data) {
-                        response($.map(data, function (item) {
-                            $("#parent_id").val(item.id);
-
-                            getConceptProperties("{% url 'concepts:getcategoryproperties' "52de82417febbd1536575a9d" %}", item.id)
-
-                            return {
-                                label: item.title,
-                                value: item.title
-                            }
-                        }));
-                    }
-                });
-            },
-            minLength: 2
-        });
     });
 
 </script>

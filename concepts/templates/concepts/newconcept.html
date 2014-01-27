@@ -1,0 +1,70 @@
+{% load mongo_filters %}
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static "concepts/climbtime.css" %}" />
+<script type="text/javascript" src="{% static "concepts/property_functions.js" %}"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script  type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script type="text/javascript" src="{% static "concepts/parent_autocomplete.js" %}"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
+
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'concepts:addconcept' %}" method="post">
+    {% csrf_token %}
+
+    <fieldset class="general_fs">
+        <legend>General Information</legend>
+
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" />
+        <br/>
+
+        <label for="description">Description</label>
+        <input type="text" name="description" id="description" />
+        <br/>
+
+        <label for="parent">Parent</label>
+        <input class="parent_autocomplete" type="text" name="parent" id="parent" />
+        <br/>
+    </fieldset>
+
+    <fieldset class="properties_fs">
+        <legend>Features</legend>
+
+        <div>
+            <ul id="prop_list">
+                <!-- add the header for the list -->
+                <li class="featuresheader">
+                    <!--<div class='ctaddfeaturelabels'>-->
+                        <div class='titlelabel'>Feature name</div>
+                        <div class='typelabel'>Type of...</div>
+                        <div class='valuelabel'>Value</div>
+  	                 <div class='removelabel'>X</div>
+  	                 <!--  </div> -->
+                </li>
+            </ul>
+            <br/>
+            <button class="add_prop_button, ctbutton" type="button" id="add_prop">Add Property</button>
+        </div>
+    </fieldset>
+
+    <input class="ctbutton" type="submit" value="Save" />
+</form>
+
+
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        parentAutoUrl = "{% url 'concepts:parentautocomplete' %}";
+        propertiesAjaxUrl = "{% url 'concepts:getcategoryproperties' %}"
+        isCategory = false;
+
+        $("#add_prop").click(function(){
+            addPropertyRow(null, null, null, null, isCategory);
+        });
+
+    });
+
+</script>

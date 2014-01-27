@@ -1,16 +1,117 @@
 body, p {
+    font-family: "Courier New", Courier, monospace;
+    background-color: black;
+}
+
+.main_page {
+    background-color: white;
+    border-width:0px;
+}
+
+h1{
+padding-top: 10px;
+font-family: Impact, Charcoal, sans-serif;
+font-size: 36px;
+padding:0px;
+margin: 0px;
+line-height:100px;
+text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
+width:310px;
+float:left;
+}
+
+h2 {
+    padding-top: 10px;
     font-family: Impact, Charcoal, sans-serif;
+    font-size: 24px;
+    padding:5px;
+    margin: 0px;
+    line-height:40px;
+    text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
+    width:310px;
 }
 
-input {
-
+.slogan{
+float: left;
+margin:75px 20px 10px 0px;
+font-size: 20px;
 }
 
-label {
-
+.banner{
+width:90%;
+height: 100px;
+margin:7px auto;
+-moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+-moz-border-radius: 15px;
+-webkit-border-radius: 15px;
 }
 
-div, button, .ctbutton {
+.title-container {
+  background-image:url(images/tree-frog.jpg);
+    background-position:center;
+    background-size: cover;
+    width:200px;
+    height:100px;
+    -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+}
+
+.banner h1 {
+    margin-left:15px;
+}
+
+.footer {
+    margin:10px;
+    padding:10px;
+    height:20px;
+}
+
+.section {
+    width:88%;
+    margin-left:5%;
+    padding:10px;
+    padding-bottom:30px;
+    -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+}
+
+.section-header {
+    border-width: 0px 2px 2px 0px;
+    clear:both;
+    -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+}
+
+.section-content {
+   border-width: 0px 0px 0px 0px;
+   background-color: transparent;
+}
+
+.form_input {
+    padding:2px;
+    border-width: 0px;
+}
+
+.form_input input {
+    display: inline-block;
+}
+
+.form_input label {
+    display: inline-block;
+    float: left;
+
+    width: 120px;
+    text-align: right;
+}
+
+div, button {
     background-color: rgba(52, 238, 24, 0.6);
     color: White;
     border-style: solid;
@@ -18,38 +119,90 @@ div, button, .ctbutton {
     border-color: white;
 }
 
+.ctbutton {
+    background-color: black;
+    color: White;
+    border-style: outset;
+    border-width: 2px;
+    border-color: white;
+}
+
+.ctsave {
+    position: fixed; top: 115px; left: 95%;
+    height:50px;
+}
+
 ul {
     list-style-type: none;
-    width:380px;
-	padding-left:20px;
+    width:410px;
+	padding-left:10px;
 }
 li .featuresheader {
 
 }
 
-.general_fs, .properties_fs {}
+.column1 {
+    float:left;
+    padding:10px;
+    border-width: 0px 2px 2px 0px;
+    -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+}
+
+.column2 {
+    margin-left:42%;
+    padding:10px;
+    margin-top:10px;
+    border-width: 0px 2px 2px 0px;
+    -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+}
+
+.general_fs, .properties_fs  {
+    width: 300px;
+}
 
  .titlelabel   {
     float: left;
-	font-weight: bold;
+    font-family: Impact, Charcoal, sans-serif;
 	width:150px;
 	margin-right:5px;
 	padding:5px;
+    background-color: rgb(20, 170, 0);
+    -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
 }
 
  .typelabel {
     float: left;
-	font-weight: bold;
-	width:150px;
+    font-family: Impact, Charcoal, sans-serif;
+	width:100px;
 	margin-right:5px;
 	padding:5px;
+    background-color: rgb(20, 170, 0);
+    -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
 }
 
+.property_row {
+    padding-left:5px;
+    border-style:none;
+}
 
 .ctaddfeaturelabels {
-    width: 400px;
     padding-top: 5px;
     padding-left: 5px;
+    height:40px;
+    border-style:none;
+    background-color: transparent;
 }
 
 .valuelabel {
@@ -63,19 +216,35 @@ li .featuresheader {
 }
 
 .removelabel {
-    float: right;
-	font-weight: bold;
-	width:25px;
+    float: left;
+    font-family: Impact, Charcoal, sans-serif;
+	width:16px;
 	margin-right:5px;
 	padding:5px;
-	color:black;
+    background-color: rgb(20, 170, 0);
+    -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
 	text-align:center;
 }
 
-.ctnewtype, .ctnewfeaturetitle, .ctnewvalue {
+.ctnewtype {
+	float:left;
+	width:112px;
+	margin-right:5px;
+}
+
+.ctnewvalue {
 	float:left;
 	width:109px;
 	margin-right:5px;
+}
+
+.ctnewfeaturetitle {
+    float: left;
+    width:158px;
+    margin-right:5px;
 }
 
 
@@ -88,16 +257,15 @@ li .featuresheader {
 
 }
 
+remove-button {
+    float:left;
+}
+
 .ctfields {
 	width:400px;
 }
 
 
-.ctnewtype, .ctnewfeaturetitle, .ctnewvalue {
-
-	width:150px;
-	margin-right:5px;
-}
 
 
 .ctproprow {
@@ -110,8 +278,10 @@ li .featuresheader {
 }
 
 
-#add_prop_button{
-    margin-left: 50px;
+.add_prop_button{
+    clear:both;
+    padding-left:10px;
+    float:left;
 }
 
 

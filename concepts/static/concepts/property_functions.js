@@ -33,6 +33,7 @@ function addPropertyRow(title, type, val, propId, isCategory) {
 
 
 	rowHtml = '<li id=\'proprow_' + propId + '\'>' +
+                '<div class=\'property_row\'>' +
 				'<input class=\'ctnewfeaturetitle\' value=\'' + title + '\' id=\'prop_' + propId +  '\' name=\'prop_' + propId + '\' />' +
                 '<select class=\'ctnewtype\' id=\'proptype_' + propId + '\' name=\'proptype_' + propId + '\'>';
 
@@ -53,7 +54,7 @@ function addPropertyRow(title, type, val, propId, isCategory) {
         rowHtml += '<input class=\'ctnewvalue\' value=\'' + val + '\' name=\'propval_' + propId + '\' id=\'propval_' + propId + '\' />'
     }
 
-    rowHtml += '<button type=\'button\' id=\'remove' + propId + '\'>-</button></li>';
+    rowHtml += '<button class=\'ctbutton remove-button\' type=\'button\' id=\'remove' + propId + '\'>-</button></div></li>';
 
 
     jQuery('#prop_list').append(rowHtml);
@@ -97,19 +98,20 @@ function addPropertyRow(title, type, val, propId, isCategory) {
 
 }
 
-function getConceptProperties(url, category_id) {
+function getConceptProperties(url, categoryId, forCategory) {
 
     alert(url);
+    url = url + "/" + categoryId;
 
     $.ajax({
         url: url,
         dataType: "jsonp",
         data: {
-            category_id: category_id
+            category_id: categoryId
         },
         success: function (data) {
             $.each(data, function(index, element) {
-                addPropertyRow(element.title, element.property_type, null, null, true);
+                addPropertyRow(element.title, element.property_type, null, null, forCategory);
             });
         }
     });
