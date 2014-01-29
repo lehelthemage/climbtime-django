@@ -38,6 +38,8 @@ class Category(Document):
     ancestor_associations = ListField(IntField())
     parent = ReferenceField('self', default=None)
     features = ListField(ReferenceField(Feature))
+    pictures = ListField(EmbeddedDocumentField(Picture))
+    default_picture = EmbeddedDocumentField(Picture)
 
     def __unicode__(self):
         return self.title

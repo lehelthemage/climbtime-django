@@ -1,5 +1,6 @@
 # Django settings for climbtime project.
 import mongoengine
+from django.core.urlresolvers import reverse
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -21,6 +22,9 @@ SESSION_ENGINE = 'mongoengine.django.sessions' # optional
 AUTHENTICATION_BACKENDS = (
     'mongoengine.django.auth.MongoEngineBackend',
 )
+
+AUTH_USER_MODEL = 'mongo_auth.MongoUser'
+
 
 _MONGODB_USER = 'lehelkovach@gmail.com'
 _MONGODB_PASSWD = 'Kovach789'
@@ -138,7 +142,11 @@ INSTALLED_APPS = (
 	'concepts',
 )
 
-SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
+SESSION_ENGINE = 'mongoengine.django.sessions'
+SESSION_SERIALIZER = 'mongoengine.django.sessions.BSONSerializer'
+
+LOGIN_URL = '/concepts/login'
+
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

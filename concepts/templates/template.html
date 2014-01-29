@@ -12,6 +12,8 @@
     <script  src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     <script  src="{% static "concepts/parent_autocomplete.js" %}"></script>
 
+    <link href='http://fonts.googleapis.com/css?family=Vidaloka' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Audiowide' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
     <link rel="stylesheet" type="text/css" href="{% static "concepts/climbtime.css" %}" />
 
@@ -20,8 +22,27 @@
     <div class="main_page"></div>
         <div class="banner">
             <div class="title-container">
-            <h1>ClimbTi.me</h1>
+                <h1>ClimbTi.me</h1>
+
             </div>
+
+            {% if user.is_authenticated %}
+            <div class="menu-bar">
+                    <div class="search-bar"><input class="main-search-box" /><button class="ctbutton">?</button></div>
+                    <div class="notifications-button"></div>
+                    <div class="options-button"></div>
+                    <div class="account-button"></div>
+
+            </div>
+
+            <div class="popup" id="menu">
+            <ul class="menu" id="account-menu">
+                <li>Account Settings</li>
+                <li>Logout - {{ user.username }}</li>
+            </ul>
+            </div>
+            {% endif %}
+
         </div>
 
         {% block content %}
@@ -29,5 +50,30 @@
 
         <div class="footer"></div>
     </div>
+
+    <script type="text/javascript">
+        var mouseX;
+        var mouseY;
+
+        $(document).mousemove( function(e) {
+           mouseX = e.pageX;
+           mouseY = e.pageY;
+        });
+
+        $(document).ready(function(){
+            $('.account-button').click(function(){
+                $('#menu').css({'visibility':'visible'});
+                $('#menu').css({'top':mouseY,'left':mouseX}).fadeIn('slow');
+            });
+
+            //create a id for each menu item and hook the click
+            $(".menu").mouseleave(function(){
+                $('#menu').fadeOut('slow');
+}           );
+        });
+    </script>
 </body>
 </html>
+
+
+

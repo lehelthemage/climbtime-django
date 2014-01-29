@@ -1,0 +1,33 @@
+{% extends "template.html" %}
+{% block content %}
+
+<form action="{% url 'concepts:authenticate' %}" method="post">
+    {% csrf_token %}
+    <div class="section">
+        <div class="section-header beveled-label"><h2>You are not logged in...</h2></div>
+
+        <div class="section-content">
+            <div class="column1">
+            <div class="login-box">
+                <fieldset>
+                    <legend>Login</legend>
+
+                    <div class="user-row">
+                        <label class="beveled-label" for="username">Username:</label>
+                        <input name="username" id="username" />
+                    </div>
+
+                    <div class="password-row">
+                        <label class="beveled-label" for="password">Password:</label>
+                        <input name="password" id="password" />
+                    </div>
+
+                    <input type="submit" class="ctbutton" value="Login" />
+                </fieldset>
+            </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+{% endblock %}

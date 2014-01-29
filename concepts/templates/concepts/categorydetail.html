@@ -1,54 +1,75 @@
-{% load mongo_filters %}
-{% load staticfiles %}
-<script type="text/javascript" src="{% static "concepts/property_functions.js" %}"></script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script  type="text/javascript" src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-<script type="text/javascript" src="{% static "concepts/parent_autocomplete.js" %}"></script>
-<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
+{% extends "template.html" %}
+{% block content %}
 
 <form action="{% url 'concepts:categoryupdate' category.id %}" method="post">
 {% csrf_token %}
 
-<h1>{{ category.title }}</h1>
-<br/>
-<h2>{{ category.description }}</h2>
-<br/>
-<h2>Author: {{ category.author.username }}</h2>
-<h3>Publication Date: {{ category.pub_date }}</h3>
-<h3>Parent: {{ category.parent.title }}</h3>
-<input type="text" id="parent" name="parent" value="{{ category.parent.title }}"/>
-<input type="hidden" id="parent_id" name="parent_id" value="{{ category.parent.id}}"/>
+    <div class="section">
+        <div class="section-header beveled-label"><h2>{{ category.title }}</h2></div>
+        <div class="section-content ">
+            <div class="column1">
+            <fieldset class="general_fs">
+                <legend>General Information</legend>
+                <div>
+                    <div class="form_input">
+                    <label class="beveled-label" for="title">Title:</label>
+                    <input type="text" id="title" name="title" value="{{ category.title }}"/>
+                    </div>
 
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+                    <div class="form_input">
+                    <label class="beveled-label" for="parent">Parent:</label>
+                    <input class="parent_autocomplete" type="text" name="parent" id="parent" value="{{ category.parent.title }}" />
+                    </div>
 
-<input type="text" name="description" id="description" value="{{ concept.description }}" />
-<br/>
-<h3>number of properties: {{ category.features|length }}</h3>
+                    <div class="form_input">
+                    <label class="beveled-label" for="description">Description:</label>
+                    <textarea name="description" id="description" value="{{ category.description }}"></textarea>
+                    </div>
 
-<ul id="prop_list">
-<script type="text/javascript">
 
-    $(document).ready(function(){
-        {% for feature in category.features %}
-        addPropertyRow('{{ feature.title }}','{{ feature.property_type }}', null, '{{ feature.id }}', true);
-        {% endfor %}
-    });
+                </div>
+            </fieldset>
+            </div>
 
-</script>
-</ul>
-<button type="button" id="add_prop">Add Property</button>
-<br/>
-<br/>
-<input type="submit" value="Save" />
+
+            <div class="column2">
+            <fieldset class="properties_fs">
+                <legend>Features</legend>
+
+                <div>
+                    <ul id="prop_list">
+                        <!-- add the header for the list -->
+                        <li class="featuresheader">
+                            <div class='ctaddfeaturelabels'>
+                                <div class='titlelabel beveled-label'>Property Name</div>
+                                <div class='typelabel beveled-label'>Type of...</div>
+                                <div class='removelabel beveled-label'>X</div>
+                             </div>
+                        </li>
+                    </ul>
+                    <br/>
+                    <button class="ctbutton add_prop_button" type="button" id="add_prop">Add Property</button>
+                </div>
+            </fieldset>
+            </div>
+        </div>
+    </div>
+
+    <input class="ctbutton ctsave" type="submit" value="Save" />
 </form>
+
+
 
 <script type="text/javascript">
 
     $(document).ready(function() {
-
         parentAutoUrl = "{% url 'concepts:parentautocomplete' %}";
         propertiesAjaxUrl = "{% url 'concepts:getcategoryproperties' %}"
-        isCategory = true
+        isCategory = true;
+
+       {% for feature in category.features %}
+        addPropertyRow('{{ feature.title }}','{{ feature.property_type }}', null, '{{ feature.id }}', true);
+       {% endfor %}
 
         $("#add_prop").click(function(){
             addPropertyRow(null, null, null, null, isCategory);
@@ -58,3 +79,4 @@
 
 </script>
 
+{% endblock %}

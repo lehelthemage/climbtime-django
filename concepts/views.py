@@ -1,6 +1,9 @@
 # Create your views here.
 from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.template import RequestContext, loader
+from django.contrib.auth import login as auth_login, logout, authenticate
+from django.contrib.auth.decorators import login_required
+from mongoengine import DoesNotExist
+from mongoengine.django.auth import User
 from django.shortcuts import get_object_or_404, render
 from django.core.urlresolvers import reverse
 import bson
@@ -209,9 +212,9 @@ def add_concept(request):
 
     return HttpResponseRedirect(reverse('concepts:conceptdetail', args=(new_con.id,)))
 
-
+@login_required
 def new_category(request):
-    return render(request, 'concepts/newcategory.html')
+    return render(request, 'concepts/newcategory.html', {'user': request.user})
 
 
 def add_category(request):
@@ -316,4 +319,31 @@ def get_category_properties(request):
         response = 'fail'
 
     return HttpResponse(response, mimetype="application/json")
+
+
+def login_view(request):
+    return render(request, 'concepts/login.html')
+
+def login(request):
+    try:
+        uname = request.POST['username']
+        passwd = request.POST['password']
+        user = User.objects.get(username=uname)
+        if user.check_password(passwd):
+            user.backend = 'mongoengine.django.auth.MongoEngineBackend'
+            user = authenticate(username=uname, password=passwd)
+            auth_login(request, user)
+            request.session.set_expiry(60 * 60 * 1) # 1 hour timeout
+            return HttpResponseRedirect(reverse('concepts:newcategory'))
+        else:
+            return HttpResponse('login failed')
+    except DoesNotExist:
+        return HttpResponse('user does not exist')
+    except Exception, e:
+        return HttpResponse(e.message)
+
+
+def logout_view(request):
+    logout(request)
+    return render(request, 'concepts/login.html')
 

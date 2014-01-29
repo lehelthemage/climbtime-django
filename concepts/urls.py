@@ -12,6 +12,10 @@ urlpatterns = patterns('',
                        url(r'^categoryupdate/(?P<category_id>\w+)/$', 'concepts.views.category_update', name='categoryupdate'),
                        url(r'^parentautocomplete/', 'concepts.views.autocomplete_parents', name='parentautocomplete'),
                        url(r'^getcategoryproperties/$', 'concepts.views.get_category_properties', name='getcategoryproperties'),
+                       url(r'^login/$', 'concepts.views.login_view', name='login'),
+                       url(r'^logout/$', 'concepts.views.logout_view', name='logout'),
+                       url(r'^authenticate/$', 'concepts.views.login', name='authenticate'),
+
 
 
 )

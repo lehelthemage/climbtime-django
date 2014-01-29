@@ -1,6 +1,6 @@
 body, p {
-    font-family: "Courier New", Courier, monospace;
-    background-color: black;
+    font-family: 'Audiowide', cursive;
+    background-color: #272727;
 }
 
 .main_page {
@@ -9,26 +9,28 @@ body, p {
 }
 
 h1{
-padding-top: 10px;
-font-family: Impact, Charcoal, sans-serif;
-font-size: 36px;
-padding:0px;
-margin: 0px;
-line-height:100px;
-text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
-width:310px;
-float:left;
+    padding-top: 10px;
+    font-family: 'Audiowide', cursive;
+    font-weight: bold;
+    font-size: 36px;
+    padding:0px;
+    margin: 0px;
+    line-height:100px;
+    text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
+    width:310px;
+    float:left;
 }
 
 h2 {
     padding-top: 10px;
-    font-family: Impact, Charcoal, sans-serif;
+    font-family: 'Audiowide', cursive;
     font-size: 24px;
     padding:5px;
     margin: 0px;
     line-height:40px;
     text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
     width:310px;
+    margin-left:10px;
 }
 
 .slogan{
@@ -48,7 +50,7 @@ margin:7px auto;
 }
 
 .title-container {
-  background-image:url(images/tree-frog.jpg);
+    background-image:url(images/tree-frog.jpg);
     background-position:center;
     background-size: cover;
     width:200px;
@@ -59,8 +61,54 @@ margin:7px auto;
     -webkit-border-radius: 15px;
 }
 
+.menu-bar {
+    position: fixed;
+    top: 20px;
+    left: 280px;
+    margin-right:20px;
+    padding: 10px;
+    -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+}
+
+.account-button {
+    background-image :url(images/account.jpg);
+    width:52px;
+    height:50px;
+    border-style:none;
+    float:right;
+}
+
+.options-button {
+    background-image :url(images/options.jpg);
+    width:52px;
+    height:50px;
+    border-style:none;
+    float:right;
+}
+
+.notifications-button {
+    background-image :url(images/notifications.jpg);
+    width:52px;
+    height:50px;
+    border-style:none;
+    float:right;
+}
+
+.search-bar {
+    float:left;
+    border-style:none;
+}
+.main-search-box {
+    width:450px;
+    height:40px;
+    font-family: 'Audiowide', cursive;
+    font-weight: 30px;
+}
+
 .banner h1 {
-    margin-left:15px;
 }
 
 .footer {
@@ -78,15 +126,38 @@ margin:7px auto;
     -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
     -moz-border-radius: 15px;
     -webkit-border-radius: 15px;
+    overflow: auto;
+    background-color:white;
+    border-color: rgb(5, 150, 74);
 }
 
 .section-header {
-    border-width: 0px 2px 2px 0px;
-    clear:both;
+        clear:both;
+        margin-bottom:10px;
+}
+
+.beveled-label {
+    border-width: 2px 2px 2px 2px;
+    border-style: outset;
+
     -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
     -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
-    -moz-border-radius: 15px;
-    -webkit-border-radius: 15px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+
+    background: #d1ffe8; /* Old browsers */
+    background: -moz-linear-gradient(top, #d1ffe8 0%, #09e54b 17%, #3ab03c 28%, #009c16 64%, #007418 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#d1ffe8), color-stop(17%, #09e54b), color-stop(28%, #3ab03c), color-stop(64%, #009c16), color-stop(100%, #007418)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #d1ffe8 0%, #09e54b 17%, #3ab03c 28%, #009c16 64%, #007418 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #d1ffe8 0%, #09e54b 17%, #3ab03c 28%, #009c16 64%, #007418 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #d1ffe8 0%, #09e54b 17%, #3ab03c 28%, #009c16 64%, #007418 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #d1ffe8 0%, #09e54b 17%, #3ab03c 28%, #009c16 64%, #007418 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d1ffe8', endColorstr='#00913a',GradientType=0 ); /* IE6-9 */
+
+}
+
+.login-box {
+    width:340px;
 }
 
 .section-content {
@@ -103,24 +174,55 @@ margin:7px auto;
     display: inline-block;
 }
 
-.form_input label {
+label {
     display: inline-block;
     float: left;
-
+    padding-right: 5px;
     width: 120px;
     text-align: right;
 }
 
+.form_input textarea {
+    height: 100px;
+    width: 150px;
+}
+
 div, button {
-    background-color: rgba(52, 238, 24, 0.6);
+    background-color: rgb(94, 229, 94);
     color: White;
     border-style: solid;
     border-width: 1px;
     border-color: white;
 }
 
+#menu {
+    position:absolute;
+    z-index:2;
+    visibility: hidden;
+}
+
+.menu {
+    width:150px;
+    height:200px;
+    border-style:solid;
+    border-width:2px;
+    border-color:white;
+    background-color: #272727;
+    color:white;
+    cursor:hand;
+}
+
+.menu li {
+    border-bottom-width: 1px;
+    border-bottom-color: #272727;
+}
+
+.menu li:hover {
+    background-color: rgba(20, 130, 5, 0.3);
+}
+
 .ctbutton {
-    background-color: black;
+    background-color: #272727;
     color: White;
     border-style: outset;
     border-width: 2px;
@@ -128,8 +230,15 @@ div, button {
 }
 
 .ctsave {
-    position: fixed; top: 115px; left: 95%;
+    position: fixed;
+    top: 65%;
+    left: 95%;
     height:50px;
+}
+
+.user-row, .password-row {
+    padding: 5px;
+    border-style:none;
 }
 
 ul {
@@ -144,31 +253,35 @@ li .featuresheader {
 .column1 {
     float:left;
     padding:10px;
-    border-width: 0px 2px 2px 0px;
+    border-width: 2px 2px 2px 2px;
     -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
     -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
     -moz-border-radius: 15px;
     -webkit-border-radius: 15px;
+    background-color: #272727;
+    border-style: outset;
 }
 
 .column2 {
     margin-left:42%;
     padding:10px;
     margin-top:10px;
-    border-width: 0px 2px 2px 0px;
+    border-width: 2px 2px 2px 2px;
     -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
     -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
     -moz-border-radius: 15px;
     -webkit-border-radius: 15px;
+    background-color: #272727;
+    border-style: outset;
 }
 
 .general_fs, .properties_fs  {
-    width: 300px;
+
 }
 
  .titlelabel   {
     float: left;
-    font-family: Impact, Charcoal, sans-serif;
+    font-family: 'Audiowide', cursive;
 	width:150px;
 	margin-right:5px;
 	padding:5px;
@@ -181,7 +294,7 @@ li .featuresheader {
 
  .typelabel {
     float: left;
-    font-family: Impact, Charcoal, sans-serif;
+    font-family: 'Audiowide', cursive;
 	width:100px;
 	margin-right:5px;
 	padding:5px;
@@ -217,7 +330,7 @@ li .featuresheader {
 
 .removelabel {
     float: left;
-    font-family: Impact, Charcoal, sans-serif;
+    font-family: 'Audiowide', cursive;
 	width:16px;
 	margin-right:5px;
 	padding:5px;
