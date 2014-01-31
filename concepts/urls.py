@@ -15,6 +15,7 @@ urlpatterns = patterns('',
                        url(r'^login/$', 'concepts.views.login_view', name='login'),
                        url(r'^logout/$', 'concepts.views.logout_view', name='logout'),
                        url(r'^authenticate/$', 'concepts.views.login', name='authenticate'),
+                       url(r'^ajax_upload_media/$', 'concepts.views.ajax_upload_media', name='ajax_upload_media'),
 
 
 

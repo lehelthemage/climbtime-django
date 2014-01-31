@@ -14,18 +14,19 @@
                 <legend>General Information</legend>
                 <div>
                     <div class="form_input">
-                    <label class="beveled-label" for="title">Title:</label>
-                    <input type="text" id="title" name="title" />
+                        <label class="beveled-label" for="title">Title:</label>
+                        <input type="text" id="title" name="title" />
                     </div>
 
                     <div class="form_input">
-                    <label class="beveled-label" for="parent">Parent:</label>
-                    <input class="parent_autocomplete" type="text" name="parent" id="parent" />
+                        <label class="beveled-label" for="parent">Parent:</label>
+                        <input class="parent_autocomplete" type="text" name="parent" id="parent" />
+                        <input type="hidden" name="parent_id" id="parent_id" />
                     </div>
 
                     <div class="form_input">
-                    <label class="beveled-label" for="description">Description:</label>
-                    <textarea name="description" id="description"></textarea>
+                        <label class="beveled-label" for="description">Description:</label>
+                        <textarea name="description" id="description"></textarea>
                     </div>
 
 
@@ -40,6 +41,11 @@
                         <div id="dropbox" class="pic-upload">
                             <p class="uploader-text">Drag pictures here to upload...</p>
                         </div>
+                        <input type="hidden" id="pic1" name="pic1" />
+                        <input type="hidden" id="pic2" name="pic2" />
+                        <input type="hidden" id="pic3" name="pic3" />
+                        <input type="hidden" id="pic4" name="pic4" />
+                        <input type="hidden" id="pic5" name="pic5" />
                     </fieldset>
                 </div>
 

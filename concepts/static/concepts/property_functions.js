@@ -100,7 +100,6 @@ function addPropertyRow(title, type, val, propId, isCategory) {
 
 function getConceptProperties(url, categoryId, forCategory) {
 
-    alert(url);
     url = url + "/" + categoryId;
 
     $.ajax({

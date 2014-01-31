@@ -3,18 +3,21 @@ $(function(){
 	var dropbox = $('#dropbox'),
 		message = $('.message', dropbox);
 
+    var picIndex = 1;
+
 
 	dropbox.filedrop({
 		// The name of the $_FILES entry:
 		paramname:'pic',
-		
 		maxfiles: 5,
     	maxfilesize: 2,
-		url: 'post_file.php',
+		url: '../ajax_upload_media/',
 		
 		uploadFinished:function(i,file,response){
-			$.data(file).addClass('done');
-			// response is the JSON object that post_file.php returns
+			$.data(file).addClass('uploaded');
+
+	        $('#pic' + picIndex).val(response);
+            picIndex++;
 		},
 		
     	error: function(err, file) {
@@ -58,7 +61,7 @@ $(function(){
 	var template = '<div class="preview">'+
 						'<span class="imageHolder">'+
 							'<img />'+
-							'<span class="uploaded"></span>'+
+							'<span class="done"></span>'+
 						'</span>'+
 						'<div class="progressHolder">'+
 							'<div class="progress"></div>'+

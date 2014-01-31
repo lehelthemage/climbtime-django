@@ -8,8 +8,10 @@ from django.shortcuts import get_object_or_404, render
 from django.core.urlresolvers import reverse
 import bson
 import simplejson
+from PIL import Image
 
-from concepts.models import Concept, Feature, Property, Category, PROPERTY_TYPE
+
+from concepts.models import Concept, Feature, Property, Category, PROPERTY_TYPE, Picture
 
 
 def get_new_properties(request, for_category):
@@ -222,7 +224,11 @@ def add_category(request):
 
     new_cat.title = request.POST['title']
     new_cat.description = request.POST['description']
-    new_cat.parent = None
+    parent_id = bson.ObjectId(request.POST['parent_id'])
+    new_cat.parent = Category.objects.get(id=parent_id)
+    pic_id1 = request.POST['pic1']
+    pic1 = bson.ObjectId(pic_id1)
+    new_cat.pictures.append(Picture.objects.get(id=pic1))
 
     form_properties = get_new_properties(request, True)
 
@@ -262,7 +268,7 @@ def category_detail(request, category_id):
 def category_update(request, category_id):
     c = Category.objects.get(id=category_id)
     c.description = request.POST['description']
-    c.parent = Category.objects.get(id=request.POST['parent_id'])
+    c.parent = Category.objects.filter(id=request.POST['parent_id']).limit(1)
     update_properties(request, c, True)
     c.save()
 
@@ -346,4 +352,27 @@ def login(request):
 def logout_view(request):
     logout(request)
     return render(request, 'concepts/login.html')
+
+
+def ajax_upload_media(request):
+    if request.is_ajax():
+        callback = request.GET.get('callback', '')
+        pic_file = request.FILES.get('pic')
+        if pic_file:
+            pic = Picture()
+            pic.id = bson.ObjectId()
+            pic.image.put(pic_file)
+            pic.save()
+
+            response = simplejson.dumps(str(pic.id))
+        else:
+            response = 'fail'
+
+    else:
+        response = 'fail'
+
+    return HttpResponse(response, mimetype="application/json")
+
+
+
 

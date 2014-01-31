@@ -12,12 +12,13 @@ PROPERTY_TYPE = (    ('Num', 'Number'),
                      ('Con', 'Topic'))
 
 
-class Picture(EmbeddedDocument):
-    caption = StringField(max_length=400)
-    image = BinaryField(required=True)
+class Picture(Document):
+    id = ObjectIdField(primary_key=True)
+    caption = StringField(max_length=400, default='')
+    image = ImageField()
 
     def __unicode__(self):
-        return self.image
+        return str(self.id)
 
 
 class Feature(Document):
@@ -38,8 +39,8 @@ class Category(Document):
     ancestor_associations = ListField(IntField())
     parent = ReferenceField('self', default=None)
     features = ListField(ReferenceField(Feature))
-    pictures = ListField(EmbeddedDocumentField(Picture))
-    default_picture = EmbeddedDocumentField(Picture)
+    pictures = ListField(ReferenceField(Picture))
+    default_picture = ReferenceField(Picture)
 
     def __unicode__(self):
         return self.title
@@ -71,8 +72,8 @@ class Concept(Document):
     description = StringField(max_length=2000, default='')
     author = ReferenceField(User, required=True)
     pub_date = DateTimeField(help_text='date published', required=True)
-    pictures = ListField(EmbeddedDocumentField(Picture))
-    default_picture = EmbeddedDocumentField(Picture)
+    pictures = ListField(ReferenceField(Picture))
+    default_picture = ReferenceField(Picture)
     categories = ListField(EmbeddedDocumentField(CategoryAssociation))
     properties = ListField(EmbeddedDocumentField(Property))
 
