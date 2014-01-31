@@ -58,7 +58,7 @@ def get_new_properties(request, for_category):
 
     return new_properties
 
-
+@login_required
 def index(request):
     latest_concept_list = Concept.objects#.order_by('-pub_date')[:5]
     context = {

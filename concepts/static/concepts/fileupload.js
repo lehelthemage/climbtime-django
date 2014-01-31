@@ -49,7 +49,8 @@ $(function(){
 		},
 		
 		progressUpdated: function(i, file, progress) {
-			$.data(file).find('.progress').width(progress);
+            var width = $.data(file).find('.progressHolder').width();
+			$.data(file).find('.progress').width(progress/100.0 * width);
 		}
     	 
 	});
@@ -72,8 +73,8 @@ $(function(){
 			
 		var reader = new FileReader();
 		
-		image.width = 100;
-		image.height = 100;
+		image.width = 75;
+		image.height = 75;
 		
 		reader.onload = function(e){
 			
