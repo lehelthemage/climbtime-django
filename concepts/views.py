@@ -1,4 +1,5 @@
 # Create your views here.
+import collections
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.contrib.auth import login as auth_login, logout, authenticate
 from django.contrib.auth.decorators import login_required
@@ -47,16 +48,23 @@ def get_new_properties(request, for_category):
                 if for_category:
                     if new_property.id == i[9:]:
                         new_property.property_type = v
+                        break
                 else:
                     if new_property.property_id == i[9:]:
                         new_property.feature.property_type = v
-                break
+                        break
 
         elif i[:8] == "propval_" and len(i[8:]) < 3:
             for new_property in new_properties:
                 if new_property.property_id == i[8:]:
                     new_property.value = v
                     break
+
+    #sort by feature title
+    if for_category:
+        new_properties = sorted(new_properties, key=lambda _f: _f.title)
+    else:
+        new_properties = sorted(new_properties, key=lambda _p: _p.feature.title)
 
     return new_properties
 
@@ -174,7 +182,7 @@ def concept_update(request, concept_id):
 
 
 def new_concept(request):
-    return render(request, 'concepts/newcconcept.html')
+    return render(request, 'concepts/newconcept.html')
 
 
 def add_concept(request):
@@ -218,7 +226,7 @@ def add_concept(request):
 def new_category(request):
     return render(request, 'concepts/newcategory.html', {'user': request.user})
 
-
+@login_required
 def add_category(request):
     new_cat = Category()
 
@@ -227,8 +235,11 @@ def add_category(request):
     parent_id = bson.ObjectId(request.POST['parent_id'])
     new_cat.parent = Category.objects.get(id=parent_id)
     pic_id1 = request.POST['pic1']
-    pic1 = bson.ObjectId(pic_id1)
-    new_cat.pictures.append(Picture.objects.get(id=pic1))
+    try:
+        pic1 = bson.ObjectId(pic_id1)
+        new_cat.pictures.append(Picture.objects.get(id=pic1))
+    except:
+        pass
 
     form_properties = get_new_properties(request, True)
 
@@ -264,11 +275,11 @@ def category_detail(request, category_id):
                       'category': category,
                       'PROPERTY_TYPE': PROPERTY_TYPE})
 
-
+@login_required
 def category_update(request, category_id):
     c = Category.objects.get(id=category_id)
     c.description = request.POST['description']
-    c.parent = Category.objects.filter(id=request.POST['parent_id']).limit(1)
+    c.parent = Category.objects.filter(id=request.POST['parent_id'])[0]
     update_properties(request, c, True)
     c.save()
 
@@ -300,16 +311,16 @@ def autocomplete_parents(request):
     return HttpResponse(response, mimetype="application/json")
 
 
-def get_category_properties(request):
+def get_category_properties(request, category_id):
 
     callback = request.GET.get('callback', '')
-    category_id = request.GET.get('category_id', '')
+    #category_id = request.GET.get('category_id', '')
 
     if request.is_ajax():
         category = Category.objects.get(id=category_id)
 
         results = []
-        for category_features in category.parent.features:
+        for category_features in category.features:
             if not category_features.is_property:
                 continue
 
@@ -374,5 +385,9 @@ def ajax_upload_media(request):
     return HttpResponse(response, mimetype="application/json")
 
 
+def show_image(request, picture_id):
+    picture = Picture.objects.get(id=picture_id)
+    image = picture.image.read()
+    return HttpResponse(image, mimetype="image/png", content_type="image/" + picture.image.format)
 
 

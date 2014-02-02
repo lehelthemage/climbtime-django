@@ -5,7 +5,7 @@
 {% csrf_token %}
 
     <div class="section">
-        <div class="section-header beveled-label"><h2>{{ category.title }}</h2></div>
+        <div class="section-header beveled-label"><h2>Category: {{ category.title }}</h2></div>
         <div class="section-content ">
             <div class="column1">
             <fieldset class="general_fs">
@@ -19,11 +19,12 @@
                     <div class="form_input">
                     <label class="beveled-label" for="parent">Parent:</label>
                     <input class="parent_autocomplete" type="text" name="parent" id="parent" value="{{ category.parent.title }}" />
+                    <input type="hidden" name="parent_id" id="parent_id" value="{{ category.parent.id }}" />
                     </div>
 
                     <div class="form_input">
                     <label class="beveled-label" for="description">Description:</label>
-                    <textarea name="description" id="description" value="{{ category.description }}"></textarea>
+                    <textarea name="description" id="description" >{{ category.description }}</textarea>
                     </div>
 
 
@@ -31,8 +32,29 @@
             </fieldset>
             </div>
 
+            <div class="column2-container">
+                <div class="column2">
+                    <fieldset>
+                        <legend>Pictures</legend>
+                        <!--
+                        <div id="dropbox" class="pic-upload">
+                            <p class="uploader-text">Drag pictures here to upload...</p>
+                        </div>
+                        -->
+                        <div id="picture-previewer">
+                        <ul id="pic-list">
+                            {% for picture in category.pictures %}
+                            <li class="pic-container">
+                                <image class="pic-container-image" src="/images/{{ picture.id }}" />
+                                <input type="hidden" id="pic{{ forloop.counter }}" name="pic{{ forloop.counter }}" value="{{ picture.id }}" />
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        </div>
+                    </fieldset>
+                </div>
 
-            <div class="column2">
+                <div class="column2">
             <fieldset class="properties_fs">
                 <legend>Features</legend>
 
@@ -52,6 +74,7 @@
                 </div>
             </fieldset>
             </div>
+            </div>
         </div>
     </div>
 
@@ -64,8 +87,10 @@
 
     $(document).ready(function() {
         parentAutoUrl = "{% url 'concepts:parentautocomplete' %}";
-        propertiesAjaxUrl = "{% url 'concepts:getcategoryproperties' %}"
+        propertiesAjaxUrl = "concepts/getcategoryproperties"
         isCategory = true;
+
+        $('#pic-list').sortable();
 
        {% for feature in category.features %}
         addPropertyRow('{{ feature.title }}','{{ feature.property_type }}', null, '{{ feature.id }}', true);
