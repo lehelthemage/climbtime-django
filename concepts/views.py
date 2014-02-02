@@ -10,6 +10,8 @@ from django.core.urlresolvers import reverse
 import bson
 import simplejson
 from PIL import Image
+import datetime
+from itertools import chain
 
 
 from concepts.models import Concept, Feature, Property, Category, PROPERTY_TYPE, Picture
@@ -70,9 +72,17 @@ def get_new_properties(request, for_category):
 
 @login_required
 def index(request):
-    latest_concept_list = Concept.objects#.order_by('-pub_date')[:5]
+    latest_concept_list = Concept.objects.order_by('-date_modified')[:10]
+    for c in latest_concept_list:
+        c.is_category = False
+
+    latest_category_list = Category.objects.order_by('-date_modifed')[:10]
+    for c in latest_category_list:
+        c.is_category = True
+
+    latest_update_list = sorted(chain(latest_concept_list, latest_category_list))#, key=lambda cc: cc.date_modfied)
     context = {
-        'latest_concept_list': latest_concept_list
+        'latest_update_list': latest_update_list
     }
     return render(request, 'concepts/index.html', context)
 
@@ -175,6 +185,7 @@ def update_properties(request, c, for_category):
 def concept_update(request, concept_id):
     c = Concept.objects.get(id=concept_id)
     c.description = request.POST['description']
+    c.date_modified = datetime.datetime.now()
     update_properties(request, c, False)
     c.save()
 
@@ -190,6 +201,9 @@ def add_concept(request):
 
     new_con.title = request.POST['title']
     new_con.description = request.POST['description']
+    new_con.pub_date = datetime.datetime.now()
+    new_con.date_modified = new_con.pub_date
+    new_con.date_modified = new_con.pub_date
     new_con.parent = None
 
     form_properties = get_new_properties(request, True)
@@ -232,6 +246,8 @@ def add_category(request):
 
     new_cat.title = request.POST['title']
     new_cat.description = request.POST['description']
+    new_cat.pub_date = datetime.datetime.now()
+    new_cat.date_modified = new_cat.pub_date
     parent_id = bson.ObjectId(request.POST['parent_id'])
     new_cat.parent = Category.objects.get(id=parent_id)
     pic_id1 = request.POST['pic1']
@@ -279,6 +295,7 @@ def category_detail(request, category_id):
 def category_update(request, category_id):
     c = Category.objects.get(id=category_id)
     c.description = request.POST['description']
+    c.date_modified = datetime.datetime.now()
     c.parent = Category.objects.filter(id=request.POST['parent_id'])[0]
     update_properties(request, c, True)
     c.save()

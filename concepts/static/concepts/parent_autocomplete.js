@@ -2,9 +2,8 @@
  * Created by Lehel Kovach on 1/23/14.
  */
 $(document).ready(function() {
-$('.parent_autocomplete').autocomplete({
-            source:
-            function (request, response) {
+    $('.parent_autocomplete').autocomplete({
+            source: function (request, response) {
                 $.ajax({
                     url: parentAutoUrl,
                     dataType: "jsonp",
@@ -14,17 +13,25 @@ $('.parent_autocomplete').autocomplete({
                     success: function (data) {
                         response($.map(data, function (item) {
                             $("#parent_id").val(item.id);
+                            /*
+
 
                             getConceptProperties(propertiesAjaxUrl, item.id, isCategory);
-
+*/
                             return {
                                 label: item.title,
-                                value: item.title
+                                value: item.title,
+                                id: item.id
                             }
                         }));
                     }
                 });
             },
-            minLength: 2
+            minLength: 2,
+            select: function(e, ui) {
+                $("#parent_id").val(ui.item.id);
+                getConceptProperties(propertiesAjaxUrl,ui.item.id, isCategory);
+            }
         });
+
 });

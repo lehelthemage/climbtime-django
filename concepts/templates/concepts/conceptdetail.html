@@ -6,7 +6,7 @@
 
 <form action="{% url 'concepts:conceptupdate' concept.id %}" method="post">
 {% csrf_token %}
-<h1>{{ category.title }}</h1>
+<h1>Concept: {{ category.title }}</h1>
 <br/>
 <h2>{{ category.description }}</h2>
 <br/>

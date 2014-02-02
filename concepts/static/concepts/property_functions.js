@@ -4,17 +4,18 @@
 
 var propIndex = 0;
 
-var propTypes = new Array();
-propTypes[0] = ['Num', 'Number'];
-propTypes[1] = ['TF', 'True/False'];
-propTypes[2] = ['Str', 'Text'];
-propTypes[3] = ['Date', 'Date & Time'];
-propTypes[4] = ['Time', 'Time of Day'];
-propTypes[5] = ['Dur', 'Time Duration'];
-propTypes[6] = ['Url', 'URL'];
-propTypes[7] = ['Geo', 'Location'];
-propTypes[8] = ['Con', 'Topic'];
-
+var propTypes = {
+    'Num': 'Number',
+    'TF': 'True/False',
+    'Str': 'Text',
+    'Date': 'Date & Time',
+    'Days': 'Day(s) of Week',
+    'Time': 'Time of Day',
+    'Dur':  'Time Duration',
+    'Url': 'URL',
+    'Geo': 'Location',
+    'Con': 'Topic'
+}
 
 function addPropertyRow(title, type, val, propId, isCategory) {
 
@@ -38,13 +39,13 @@ function addPropertyRow(title, type, val, propId, isCategory) {
                 '<select class=\'ctnewtype\' id=\'proptype_' + propId + '\' name=\'proptype_' + propId + '\'>';
 
 
-    for(i = 0; i < 9; i++) {
-         rowHtml += '<option ';
+    for(var i in propTypes) {
+        rowHtml += '<option ';
 
-         if(type == propTypes[i][0])
+         if(type == i)
             rowHtml += ' selected ';
 
-         rowHtml += 'value=\'' + propTypes[i][0] +  '\'>' + propTypes[i][1] + '</option>';
+         rowHtml += 'value=\'' + i +  '\'>' + propTypes[i] + '</option>';
     }
 
     rowHtml += '</select>';
@@ -100,7 +101,7 @@ function addPropertyRow(title, type, val, propId, isCategory) {
 
 function getConceptProperties(url, categoryId, forCategory) {
 
-    url = url + "/" + categoryId;
+    url = url + categoryId;
 
     $.ajax({
         url: url,

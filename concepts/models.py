@@ -1,10 +1,12 @@
 from mongoengine import *
 from mongoengine.django.auth import User
+import datetime
 
 PROPERTY_TYPE = (    ('Num', 'Number'),
                      ('TF', 'True/False'),
                      ('Str', 'String'),
                      ('Date', 'Date & Time'),
+                     ('Days', 'Day(s) of Week'),
                      ('Time', 'Time'),
                      ('Dur', 'Time Duration'),
                      ('Url', 'URL'),
@@ -41,6 +43,7 @@ class Category(Document):
     features = ListField(ReferenceField(Feature))
     pictures = ListField(ReferenceField(Picture))
     default_picture = ReferenceField(Picture)
+    date_modified = DateTimeField(default=datetime.datetime.now)
 
     def __unicode__(self):
         return self.title
@@ -76,6 +79,7 @@ class Concept(Document):
     default_picture = ReferenceField(Picture)
     categories = ListField(EmbeddedDocumentField(CategoryAssociation))
     properties = ListField(EmbeddedDocumentField(Property))
+    date_modified = DateTimeField(default=datetime.datetime.now)
 
 
 def __unicode__(self):

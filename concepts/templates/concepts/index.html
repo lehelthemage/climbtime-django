@@ -1,11 +1,37 @@
-{% if latest_concept_list %}
+{% extends "template.html" %}
+{% block content %}
+
+{% if latest_update_list %}
 	<ul>
-	{% for concept in latest_concept_list %}
-	<li><a href="{% url 'concepts:conceptdetail' concept.id %}">
-		{{ concept.title }}
-	</a></li>
+	{% for c in latest_update_list %}
+	<li>
+        <div class="ctwidget" >
+        {% if c.is_category %}
+            <img class="ctwidget_img" src="/images/{{ c.pictures.0 }}" />
+            <a href="{% url 'concepts:categorydetail' c.id %}">
+                {{ c.title }}
+            </a>
+        {% else %}
+              {% if not c.id %}
+                  {% with blah=1 %}
+                      <img class="ctwidget_img" src="" />
+             <a href="{% url 'concepts:conceptdetail' blah %}">
+                {{ c.title }}
+             </a>
+                  {% endwith %}
+              {% else %}
+             <img class="ctwidget_img" src="" />
+             <a href="{% url 'concepts:conceptdetail' c.id %}">
+                {{ c.title }}
+             </a>
+                  {% endif %}
+        {% endif %}
+        </div>
+    </li>
 	{% endfor %}
 	</ul>
 {% else %}
     <p>No concept is available.</p>
 {% endif %}
+
+{% endblock %}

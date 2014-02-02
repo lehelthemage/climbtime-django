@@ -461,4 +461,9 @@ remove-button {
     float:left;
 }
 
+.pic-container-image {
+    width: 80px;
+    height:80px;
+}
+
 
