@@ -11,6 +11,7 @@
     <script  src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script  src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     <script  src="{% static "concepts/parent_autocomplete.js" %}"></script>
+    <script  src="{% static "concepts/category_autocomplete.js" %}"></script>
     <script  src="{% static "concepts/jquery.cookie.js" %}"></script>
     <script  src="{% static "concepts/jquery.filedrop.js" %}"></script>
     <script  src="{% static "concepts/fileupload.js" %}"></script>
@@ -25,7 +26,7 @@
 
 </head>
 <body>
-    <div class="main_page"></div>
+    <div id="main_page"></div>
         <div class="banner">
             <div class="title-container">
                 <h1>ClimbTi.me</h1>
@@ -61,6 +62,7 @@
 
             {% block content %}
             {% endblock %}
+            
         </div>
 
         <div class="footer"></div>

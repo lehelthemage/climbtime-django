@@ -26,13 +26,15 @@ AUTHENTICATION_BACKENDS = (
 AUTH_USER_MODEL = 'mongo_auth.MongoUser'
 
 
-_MONGODB_USER = 'lehelkovach@gmail.com'
-_MONGODB_PASSWD = 'Kovach789'
-_MONGODB_HOST = 'localhost'
+MONGODB_USER = 'lehel'
+MONGODB_PASSWD = 'Kovach789'
+MONGODB_HOST = 'paulo.mongohq.com'
+MONGODB_PORT = 10011
 _MONGODB_NAME = 'climbtime'
 #_MONGODB_DATABASE_HOST = 'mongodb://localhost/climbtime'
 _MONGODB_DATABASE_HOST = 'mongodb://lehel:Kovach789@paulo.mongohq.com:10011/climbtime'
     #% (_MONGODB_HOST, _MONGODB_NAME)
+MONGODB_DATABASE = 'climbtime'
 
 
 #mongoengine.connect(_MONGODB_NAME, host=_MONGODB_DATABASE_HOST)
@@ -140,6 +142,8 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 	'concepts',
+    'tastypie',
+    'tastypie_mongoengine',
 )
 
 SESSION_ENGINE = 'mongoengine.django.sessions'

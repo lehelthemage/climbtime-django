@@ -1,37 +1,67 @@
 {% extends "template.html" %}
 {% block content %}
 
-{% if latest_update_list %}
-	<ul>
-	{% for c in latest_update_list %}
-	<li>
-        <div class="ctwidget" >
-        {% if c.is_category %}
-            <img class="ctwidget_img" src="/images/{{ c.pictures.0 }}" />
-            <a href="{% url 'concepts:categorydetail' c.id %}">
-                {{ c.title }}
-            </a>
-        {% else %}
-              {% if not c.id %}
-                  {% with blah=1 %}
-                      <img class="ctwidget_img" src="" />
-             <a href="{% url 'concepts:conceptdetail' blah %}">
-                {{ c.title }}
-             </a>
-                  {% endwith %}
-              {% else %}
-             <img class="ctwidget_img" src="" />
-             <a href="{% url 'concepts:conceptdetail' c.id %}">
-                {{ c.title }}
-             </a>
-                  {% endif %}
-        {% endif %}
-        </div>
-    </li>
-	{% endfor %}
-	</ul>
-{% else %}
-    <p>No concept is available.</p>
-{% endif %}
 
+        <div class="section">
+            <div class="section-header beveled-label"><h2>Latest Concepts & Categories</h2></div>
+             <div class="section-content">
+            {% if latest_update_list %}
+                <ul id="latest-concept-list">
+                {% for c in latest_update_list %}
+                <li>
+                    <div class="ctwidget beveled-label" >
+                    {% if c.is_category %}
+                        <img class="ctwidget_img" src="/images/{{ c.pictures.0 }}" />
+                        <a href="{% url 'concepts:categorydetail' c.id %}">
+                            {{ c.title }}
+                        </a>
+                    {% else %}
+                          {% if not c.id %}
+                              {% with blah=1 %}
+                                  <img class="ctwidget_img" src="" />
+                         <a href="{% url 'concepts:conceptdetail' blah %}">
+                            {{ c.title }}
+                         </a>
+                              {% endwith %}
+                          {% else %}
+                         <img class="ctwidget_img" src="" />
+                         <a href="{% url 'concepts:conceptdetail' c.id %}">
+                            {{ c.title }}
+                         </a>
+                              {% endif %}
+                    {% endif %}
+                    </div>
+                </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>No concept/category is available.</p>
+            {% endif %}
+             </div>
+        </div>
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            $('.ctwidget').each(function() {
+                $(this).data('origPosition', $(this).offset());
+            });
+
+            $('.ctwidget').draggable({
+                revert : function(event, ui) {
+                    $(this).data("uiDraggable").originalPosition = {
+                        //top : $(this).data('origPosition').pos.top,
+                        //left : $(this).data('origPosition').pos.left
+                        top: $(this).data('origPosition').top,
+                        left: $(this).data('origPosition').left
+                    };
+                    return !event;
+                },
+                revertDuration: 200,
+                appendTo: "body",
+                helper: "clone"
+            });
+        });
+    </script>
 {% endblock %}

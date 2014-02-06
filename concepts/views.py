@@ -14,7 +14,7 @@ import datetime
 from itertools import chain
 
 
-from concepts.models import Concept, Feature, Property, Category, PROPERTY_TYPE, Picture
+from concepts.models import Concept, Feature, Property, Category, PROPERTY_TYPE, Picture, CategoryAssociation, Category
 
 
 def get_new_properties(request, for_category):
@@ -58,9 +58,14 @@ def get_new_properties(request, for_category):
 
         elif i[:8] == "propval_" and len(i[8:]) < 3:
             for new_property in new_properties:
-                if new_property.property_id == i[8:]:
-                    new_property.value = v
-                    break
+                if for_category:
+                    if new_property.id == i[8:]:
+                        new_property.value = v
+                        break
+                else:
+                    if new_property.property_id == i[8:]:
+                        new_property.value = v
+                        break
 
     #sort by feature title
     if for_category:
@@ -98,7 +103,7 @@ def concept_detail(request, concept_id):
                       'concept': concept,
                       'PROPERTY_TYPE': PROPERTY_TYPE})
 
-
+@login_required
 def update_properties(request, c, for_category):
     if not for_category:
         properties = c.properties
@@ -181,7 +186,7 @@ def update_properties(request, c, for_category):
             new_property.feature = f
             c.properties.append(new_property)
 
-
+@login_required
 def concept_update(request, concept_id):
     c = Concept.objects.get(id=concept_id)
     c.description = request.POST['description']
@@ -191,11 +196,11 @@ def concept_update(request, concept_id):
 
     return HttpResponseRedirect(reverse('concepts:conceptdetail', args=(c.id,)))
 
-
+@login_required
 def new_concept(request):
     return render(request, 'concepts/newconcept.html')
 
-
+@login_required
 def add_concept(request):
     new_con = Concept()
 
@@ -203,8 +208,13 @@ def add_concept(request):
     new_con.description = request.POST['description']
     new_con.pub_date = datetime.datetime.now()
     new_con.date_modified = new_con.pub_date
-    new_con.date_modified = new_con.pub_date
-    new_con.parent = None
+    new_con.id = bson.ObjectId()
+    new_con.author = request.user
+
+    cat_assoc = CategoryAssociation()
+    cat = Category.objects.get(id=request.POST['category_id'])
+    cat_assoc.category = cat
+    new_con.categories.append(cat_assoc)
 
     form_properties = get_new_properties(request, True)
 
@@ -405,6 +415,6 @@ def ajax_upload_media(request):
 def show_image(request, picture_id):
     picture = Picture.objects.get(id=picture_id)
     image = picture.image.read()
-    return HttpResponse(image, mimetype="image/png", content_type="image/" + picture.image.format)
+    return HttpResponse(image, content_type="image/" + picture.image.format)
 
 

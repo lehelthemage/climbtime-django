@@ -111,7 +111,7 @@ function getConceptProperties(url, categoryId, forCategory) {
         },
         success: function (data) {
             $.each(data, function(index, element) {
-                addPropertyRow(element.title, element.property_type, null, null, forCategory);
+                addPropertyRow(element.title, element.property_type, element.value, null, forCategory);
             });
         }
     });

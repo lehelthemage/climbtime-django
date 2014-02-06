@@ -34,6 +34,8 @@ class Feature(Document):
 
 
 class Category(Document):
+    id = ObjectIdField(primary_key=True)
+    author = ReferenceField(User, required=True)
     title = StringField(max_length=200, required=True)
     description = StringField(max_length=2000, required=True)
     version = IntField(default=1)

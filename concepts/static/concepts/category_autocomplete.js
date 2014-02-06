@@ -2,17 +2,17 @@
  * Created by Lehel Kovach on 1/23/14.
  */
 $(document).ready(function() {
-    $('.parent_autocomplete').autocomplete({
+    $('.category_autocomplete').autocomplete({
             source: function (request, response) {
                 $.ajax({
-                    url: parentAutoUrl,
+                    url: categoryAutoUrl,
                     dataType: "jsonp",
                     data: {
                         term: request.term
                     },
                     success: function (data) {
                         response($.map(data, function (item) {
-                            $("#parent_id").val(item.id);
+                            $("#category_id").val(item.id);
 
                             return {
                                 label: item.title,
@@ -26,8 +26,10 @@ $(document).ready(function() {
             minLength: 2,
             select: function(e, ui) {
                 $("#parent_id").val(ui.item.id);
-                getConceptProperties(propertiesAjaxUrl,ui.item.id, isCategory);
+                getConceptProperties(propertiesAjaxUrl,ui.item.id, false);
             }
         });
 
-});
+});/**
+ * Created by Dorian on 2/3/14.
+ */
