@@ -24,7 +24,7 @@ $(document).ready(function() {
                 });
             },
             minLength: 2,
-            select: function(e, ui) {
+            select: function(e, ui) {#test
                 $("#parent_id").val(ui.item.id);
                 getConceptProperties(propertiesAjaxUrl,ui.item.id, false);
             }
