@@ -28,11 +28,11 @@ AUTH_USER_MODEL = 'mongo_auth.MongoUser'
 
 MONGODB_USER = 'lehel'
 MONGODB_PASSWD = 'Kovach789'
-MONGODB_HOST = 'paulo.mongohq.com'
-MONGODB_PORT = 10011
+MONGODB_HOST = 'localhost'
+MONGODB_PORT = 27017
 _MONGODB_NAME = 'climbtime'
 #_MONGODB_DATABASE_HOST = 'mongodb://localhost/climbtime'
-_MONGODB_DATABASE_HOST = 'mongodb://lehel:Kovach789@paulo.mongohq.com:10011/climbtime'
+_MONGODB_DATABASE_HOST = 'mongodb://localhost/climbtime'
     #% (_MONGODB_HOST, _MONGODB_NAME)
 MONGODB_DATABASE = 'climbtime'
 
@@ -147,7 +147,7 @@ INSTALLED_APPS = (
 )
 
 SESSION_ENGINE = 'mongoengine.django.sessions'
-SESSION_SERIALIZER = 'mongoengine.django.sessions.BSONSerializer'
+ESSION_SERIALIZER = 'mongoengine.django.sessions.BSONSerializer'
 
 LOGIN_URL = '/concepts/login'
 

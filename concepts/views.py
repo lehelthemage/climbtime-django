@@ -254,6 +254,7 @@ def new_category(request):
 def add_category(request):
     new_cat = Category()
 
+    new_cat.id = bson.ObjectId()
     new_cat.title = request.POST['title']
     new_cat.description = request.POST['description']
     new_cat.pub_date = datetime.datetime.now()

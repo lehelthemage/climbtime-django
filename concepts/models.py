@@ -35,9 +35,9 @@ class Feature(Document):
 
 class Category(Document):
     id = ObjectIdField(primary_key=True)
-    author = ReferenceField(User, required=True)
+    author = ReferenceField(User)
     title = StringField(max_length=200, required=True)
-    description = StringField(max_length=2000, required=True)
+    description = StringField(max_length=2000)
     version = IntField(default=1)
     ancestors = ListField(ReferenceField('self'))
     ancestor_associations = ListField(IntField())

@@ -15,3 +15,4 @@ class CategoryResource(MongoDBResource):
     class Meta:
         queryset = Category.objects.all()
         resource_name = 'category'
+        collection = 'climbtime'
