@@ -13,17 +13,31 @@ MANAGERS = ADMINS
 
 DATABASES = {
      'default': {
-        'ENGINE': 'django.db.backends.dummy'
+        'ENGINE': 'django_mongodb_engine',
+        'NAME': 'climbtime'
     }
 }
+
+FACEBOOK_EXTENDED_PERMISSIONS = ['email']
+
 
 SESSION_ENGINE = 'mongoengine.django.sessions' # optional
 
 AUTHENTICATION_BACKENDS = (
+    ##'mongo_auth.backends.LazyUserBackend',
+    #'mongo_auth.backends.MongoEngineBackend',
+    #'mongo_auth.backends.FacebookBackend',
     'mongoengine.django.auth.MongoEngineBackend',
+    'social_auth.backends.facebook.FacebookBackend',
+    'django.contrib.auth.backends.ModelBackend',
 )
 
-AUTH_USER_MODEL = 'mongo_auth.MongoUser'
+#AUTH_USER_MODEL = 'mongo_auth.MongoUser'
+#SOCIAL_AUTH_USER_MODEL = 'mongoengine.django.auth.User'
+#MONGOENGINE_USER_DOCUMENT = 'mongoengine.django.auth.User'
+#SOCIAL_AUTH_MODELS = 'social_auth.db.mongoengine_models'
+
+#AUTH_PROFILE_MODULE = 'django_facebook.FacebookProfile'
 
 
 MONGODB_USER = 'lehel'
@@ -116,6 +130,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    #'mongo_auth.middleware.LazyUserMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -144,12 +159,34 @@ INSTALLED_APPS = (
 	'concepts',
     'tastypie',
     'tastypie_mongoengine',
+    'regme',
+    'social_auth',
 )
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+#"django_browserid.context_processors.browserid_form",
+"django.contrib.auth.context_processors.auth",
+"django.core.context_processors.debug",
+"django.core.context_processors.i18n",
+"django.core.context_processors.media",
+"django.core.context_processors.static",
+"django.core.context_processors.tz",
+"django.contrib.messages.context_processors.messages",
+'django_facebook.context_processors.facebook',
+'django.core.context_processors.request',
+)
+
+ACCOUNT_ACTIVATION_DAYS = 7
+SITE = {'domain': 'domain.tld', 'name': 'Climbti.me'}
 
 SESSION_ENGINE = 'mongoengine.django.sessions'
 ESSION_SERIALIZER = 'mongoengine.django.sessions.BSONSerializer'
 
 LOGIN_URL = '/concepts/login'
+
+MONGOENGINE_USER_DOCUMENT = 'regme.documents.User'
+
+
 
 
 # A sample logging configuration. The only tangible logging
@@ -182,3 +219,10 @@ LOGGING = {
 }
 
 APPEND_SLASH = True
+
+FACEBOOK_APP_ID = '1522657234624624'
+FACEBOOK_APP_SECRET = 'e980533911cf9d3c309b22e1d34f59cc'
+FACEBOOK_API_SECRET = 'e980533911cf9d3c309b22e1d34f59cc'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

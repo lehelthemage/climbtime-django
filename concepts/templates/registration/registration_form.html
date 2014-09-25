@@ -1,0 +1,14 @@
+{% extends "template.html" %}
+{% block content %}
+
+<form action="{% url 'registration_register' %}"
+        method="post" role="form">
+    {% csrf_token %}
+    <div style="width:300px; margin-left:300px;">
+        {{ form.as_ul }}
+        <br/><br/>
+        <input type="submit" value="Submit" />
+    </div>
+</form>
+
+{% endblock %}

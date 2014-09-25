@@ -1,12 +1,14 @@
-from bson import ObjectId
-from pymongo import Connection
+# coding: utf-8
 
-from django.core.exceptions import ImproperlyConfigured
-from django.core.urlresolvers import reverse
-from django.conf import settings
+from bson import ObjectId
 
 from tastypie.bundle import Bundle
 from tastypie.resources import Resource
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import QueryDict
+from pymongo import Connection
+from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 
 
 db = Connection(
@@ -15,76 +17,133 @@ db = Connection(
 )[settings.MONGODB_DATABASE]
 
 
-class Document(dict):
-    # dictionary-like object for mongodb documents.
-    __getattr__ = dict.get
 
 class MongoDBResource(Resource):
     """
     A base resource that allows to make CRUD operations for mongodb.
     """
+
+
+    def get_object_class(self):
+        return self._meta.object_class
+
     def get_collection(self):
-        """
-        Encapsulates collection name.
-        """
         try:
             return db[self._meta.collection]
         except AttributeError:
             raise ImproperlyConfigured("Define a collection in your resource.")
 
-    def obj_get_list(self, request=None, **kwargs):
-        """
-        Maps mongodb documents to Document class.
-        """
-        return map(Document, self.get_collection().find())
+    def apply_filters(self, request, applicable_filters):
+        return list(map(self.get_object_class(), self.get_collection().find(applicable_filters)))
 
-    def obj_get(self, request=None, **kwargs):
+    def build_filters(self, filters):
+        if isinstance(filters, QueryDict):
+            return filters.dict()
+
+        return filters
+
+    def get_object_list(self, request):
+        bundle = self.build_bundle(request=request)
+        return self.obj_get_list(bundle)
+
+    def obj_get_list(self, bundle, **kwargs):
+        """
+        Maps mongodb documents to resource's object class.
+        """
+
+        filters = {}
+        result = []
+
+        self.authorized_read_list(result, bundle)
+
+        if hasattr(bundle.request, 'GET'):
+            filters = bundle.request.GET.copy()
+
+        # Update with the provided kwargs.
+        filters.update(kwargs)
+
+        applicable_filters = self.build_filters(filters=filters)
+
+        return self.apply_filters(bundle.request, applicable_filters)
+
+    def obj_get(self, bundle, **kwargs):
         """
         Returns mongodb document from provided id.
         """
-        return Document(self.get_collection().find_one({
+
+        obj = self.get_collection().find_one({
             "_id": ObjectId(kwargs.get("pk"))
-        }))
+        })
+
+        if not obj:
+            raise ObjectDoesNotExist
+
+        self.authorized_read_detail(obj, bundle)
+
+        return self.get_object_class()(obj)
 
     def obj_create(self, bundle, **kwargs):
         """
         Creates mongodb document from POST data.
         """
-        self.get_collection().insert(bundle.data)
-        return bundle
 
-    def obj_update(self, bundle, request=None, **kwargs):
+        bundle.data.update(kwargs)
+
+        self.authorized_create_detail(bundle.data, bundle)
+
+        oid = self.get_collection().insert(bundle.data)
+        obj = self._meta.object_class.objects.get(_id=ObjectId(oid))
+
+        return self.build_bundle(request=bundle.request, data=bundle.data, obj=obj)
+
+    def obj_update(self, bundle, **kwargs):
         """
         Updates mongodb document.
         """
-        self.get_collection().update({
-            "_id": ObjectId(kwargs.get("pk"))
-        }, {
-            "$set": bundle.data
-        })
+
+        self.authorized_update_detail(bundle.data, bundle)
+        self.get_collection().update(
+            {"_id": ObjectId(kwargs.get("pk"))},
+            {"$set": bundle.data}
+        )
+
         return bundle
 
-    def obj_delete(self, request=None, **kwargs):
+    def obj_delete(self, bundle, **kwargs):
         """
         Removes single document from collection
         """
-        self.get_collection().remove({ "_id": ObjectId(kwargs.get("pk")) })
 
-    def obj_delete_list(self, request=None, **kwargs):
+        parameters = {"_id": ObjectId(kwargs.get("pk"))}
+
+        self.authorized_delete_detail(parameters, bundle)
+        self.get_collection().remove(parameters)
+
+    def obj_delete_list(self, bundle, **kwargs):
         """
         Removes all documents from collection
         """
+
+        self.authorized_delete_list(bundle.data, bundle)
         self.get_collection().remove()
 
-    def get_resource_uri(self, item):
+    def detail_uri_kwargs(self, bundle_or_obj):
         """
-        Returns resource URI for bundle or object.
+        Given a ``Bundle`` or an object, it returns the extra kwargs needed
+        to generate a detail URI.
+
+        By default, it uses the model's ``pk`` in order to create the URI.
         """
-        if isinstance(item, Bundle):
-            pk = item.obj._id
+
+        detail_uri_name = getattr(self._meta, 'detail_uri_name', 'pk')
+        kwargs = {}
+
+        if isinstance(bundle_or_obj, Bundle):
+            if isinstance(bundle_or_obj.obj, ObjectId):
+                kwargs[detail_uri_name] = str(bundle_or_obj.obj)
+            else:
+                kwargs[detail_uri_name] = getattr(bundle_or_obj.obj, detail_uri_name)
         else:
-            pk = item._id
-        return reverse("api_dispatch_detail", kwargs={
-            "resource_name": self._meta.resource_name,
-            "pk": pk
-        })
+            kwargs[detail_uri_name] = getattr(bundle_or_obj, detail_uri_name)
+
+        return kwargs

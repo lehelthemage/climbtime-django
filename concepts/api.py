@@ -15,4 +15,7 @@ class CategoryResource(MongoDBResource):
     class Meta:
         queryset = Category.objects.all()
         resource_name = 'category'
-        collection = 'climbtime'
+        collection = 'category'
+    def get_resource_uri(self, bundle_or_obj=None):
+        super(MongoDBResource, self).get_resource_uri(self, bundle_or_obj)
+

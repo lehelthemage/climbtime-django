@@ -5,3 +5,15 @@ Language: Python 2.6x
 Framework: Django 1.5x
 Database: MongoDB
 
+
+TTD:
+Side buttons do nothing.
+Add default "Category" to null Parent. (do this for editing as well)
+Add editing of pictures (add/remove)
+Fix menu (z-order, items do nothing, change cursor)
+Add Searching
+newconcept - adding category adds "undefined" to value (remove that)
+add email activation for login
+
+
+
