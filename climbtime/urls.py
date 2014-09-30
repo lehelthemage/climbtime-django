@@ -9,6 +9,7 @@ urlpatterns = patterns('',
     url(r'', include('concepts.urls', namespace='concepts')),
     url(r'^concepts/', include('concepts.urls', namespace='concepts')),
     url(r'auth/', include('social_auth.urls')),
+
     #url(r'^accounts/', include('regme.urls')),
     #(r'^facebook/', include('django_facebook.urls')),
     #(r'^accounts/', include('django_facebook.auth_urls')),
